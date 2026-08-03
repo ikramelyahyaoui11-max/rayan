@@ -38,5 +38,15 @@
     "image": "assets/products/maaz.png",
     "defaultIntention": "عقيقة",
     "featured": false
+  },
+  {
+    "id": "sndnk",
+    "name": "dddnn",
+    "tag": "dddd",
+    "price": 7,
+    "desc": "dddddddddddd",
+    "image": "assets/products/sndnk-1785796517690.png",
+    "defaultIntention": "أضحية",
+    "featured": false
   }
 ]
