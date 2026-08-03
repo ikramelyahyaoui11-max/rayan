@@ -1432,12 +1432,13 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   .collage-main { height: 320px; }
   .collage-sub { height: 150px; }
   .hero-scroll-cue { display: none; }
-  .carousel-slide { width: calc(50% - 9px); }
-  .carousel-slide img { height: 240px; }
+  .carousel-track { gap: 12px; }
+  .carousel-slide { width: calc(50% - 6px); }
+  .carousel-slide img { height: 190px; }
   .carousel-btn { width: 40px; height: 40px; font-size: 20px; }
-  .video-card video { height: 240px; }
-  .video-play-btn { width: 46px; height: 46px; font-size: 16px; }
-  .gallery-panel { padding: 30px 16px 22px; }
+  .video-card video { height: 190px; }
+  .video-play-btn { width: 42px; height: 42px; font-size: 15px; }
+  .gallery-panel { padding: 26px 14px 20px; }
 
   .main-nav.open {
     display: flex;
