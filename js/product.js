@@ -73,7 +73,7 @@ const PRODUCTS = [
     tag: 'عرض العيد',
     price: 3600,
     desc: 'ذبيحة كاملة الحجم، توثيق شامل وتوزيع على عدد أكبر من المستفيدين',
-    image: 'assets/gallery/rayan-27.jpg',
+    image: 'assets/products/bakara.png',
     defaultIntention: 'أضحية',
   },
   {
@@ -82,7 +82,7 @@ const PRODUCTS = [
     tag: 'بداية خير',
     price: 4200,
     desc: 'بداية خير ورزق كبير، ذبح وتوزيع كامل مع توثيق بالاسم',
-    image: 'assets/gallery/rayan-33.jpg',
+    image: 'assets/products/ijl.png',
     defaultIntention: 'أضحية',
   },
   {
@@ -91,7 +91,7 @@ const PRODUCTS = [
     tag: 'للمواليد',
     price: 2600,
     desc: 'مناسب للعقيقة أو الأضحية، ذبح وتوثيق كامل وتوزيع على الفقراء',
-    image: 'assets/gallery/rayan-52.jpg',
+    image: 'assets/products/maaz.png',
     defaultIntention: 'عقيقة',
   },
 ];
