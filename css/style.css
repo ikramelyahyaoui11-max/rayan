@@ -791,6 +791,17 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
 
 /* ===================== Products ===================== */
 .product-card { text-align: center; }
+.product-card-image {
+  margin: -30px -24px 20px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  overflow: hidden;
+}
+.product-card-image img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
 .product-card.featured { border-color: transparent; box-shadow: 0 0 0 2px var(--orange), var(--shadow-lg); }
 .product-card.featured:hover { box-shadow: 0 0 0 2px var(--orange), var(--shadow-lg); }
 .product-tag {
