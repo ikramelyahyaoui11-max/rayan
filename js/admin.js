@@ -263,7 +263,7 @@ addProductBtn.addEventListener('click', async () => {
 let saveInProgress = false;
 let saveQueued = false;
 
-async function putProducts(allowRetry) {
+async function putProducts(attemptsLeft) {
   const res = await fetch(apiUrl(PRODUCTS_PATH), {
     method: 'PUT',
     headers: ghHeaders(),
@@ -275,17 +275,18 @@ async function putProducts(allowRetry) {
     }),
   });
 
-  if (res.status === 409 && allowRetry) {
-    // Our local sha is stale (another save happened in between) - refresh it and retry once.
-    const freshRes = await fetch(apiUrl(PRODUCTS_PATH), { headers: ghHeaders() });
-    const freshData = await freshRes.json();
-    productsSha = freshData.sha;
-    return putProducts(false);
-  }
-
   if (!res.ok) {
     const errData = await res.json().catch(() => ({}));
-    throw new Error(errData.message || `HTTP ${res.status}`);
+    const message = errData.message || `HTTP ${res.status}`;
+    // Any sha/version conflict (wording varies) - refresh the real sha and retry.
+    const isConflict = res.status === 409 || res.status === 422 || /sha|does not match|expected/i.test(message);
+    if (isConflict && attemptsLeft > 0) {
+      const freshRes = await fetch(apiUrl(PRODUCTS_PATH), { headers: ghHeaders() });
+      const freshData = await freshRes.json();
+      productsSha = freshData.sha;
+      return putProducts(attemptsLeft - 1);
+    }
+    throw new Error(message);
   }
 
   const data = await res.json();
@@ -300,7 +301,7 @@ async function persistProducts() {
   saveInProgress = true;
   showStatus('جاري الحفظ على GitHub...', false);
   try {
-    await putProducts(true);
+    await putProducts(3);
     showStatus('✅ تم الحفظ بنجاح! التغييرات ستظهر على الموقع خلال دقيقة تقريبًا.', false);
   } catch (err) {
     showStatus(`فشل الحفظ: ${err.message}`, true);
