@@ -260,30 +260,56 @@ addProductBtn.addEventListener('click', async () => {
 });
 
 // ===================== Save all =====================
+let saveInProgress = false;
+let saveQueued = false;
+
+async function putProducts(allowRetry) {
+  const res = await fetch(apiUrl(PRODUCTS_PATH), {
+    method: 'PUT',
+    headers: ghHeaders(),
+    body: JSON.stringify({
+      message: 'Update products via admin panel',
+      content: utf8ToBase64(JSON.stringify(products, null, 2)),
+      sha: productsSha,
+      branch: 'main',
+    }),
+  });
+
+  if (res.status === 409 && allowRetry) {
+    // Our local sha is stale (another save happened in between) - refresh it and retry once.
+    const freshRes = await fetch(apiUrl(PRODUCTS_PATH), { headers: ghHeaders() });
+    const freshData = await freshRes.json();
+    productsSha = freshData.sha;
+    return putProducts(false);
+  }
+
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `HTTP ${res.status}`);
+  }
+
+  const data = await res.json();
+  productsSha = data.content.sha;
+}
+
 async function persistProducts() {
+  if (saveInProgress) {
+    saveQueued = true;
+    return;
+  }
+  saveInProgress = true;
   showStatus('جاري الحفظ على GitHub...', false);
   try {
-    const res = await fetch(apiUrl(PRODUCTS_PATH), {
-      method: 'PUT',
-      headers: ghHeaders(),
-      body: JSON.stringify({
-        message: 'Update products via admin panel',
-        content: utf8ToBase64(JSON.stringify(products, null, 2)),
-        sha: productsSha,
-        branch: 'main',
-      }),
-    });
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.message || `HTTP ${res.status}`);
-    }
-    const data = await res.json();
-    productsSha = data.content.sha;
+    await putProducts(true);
     showStatus('✅ تم الحفظ بنجاح! التغييرات ستظهر على الموقع خلال دقيقة تقريبًا.', false);
-    return true;
   } catch (err) {
     showStatus(`فشل الحفظ: ${err.message}`, true);
-    return false;
+  } finally {
+    saveInProgress = false;
+    if (saveQueued) {
+      saveQueued = false;
+      persistProducts();
+    }
   }
 }
 
