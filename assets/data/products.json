@@ -38,5 +38,15 @@
     "image": "assets/products/maaz.png",
     "defaultIntention": "عقيقة",
     "featured": false
+  },
+  {
+    "id": "bbbs",
+    "name": "sss",
+    "tag": "jjjjduj",
+    "price": 18,
+    "desc": "dds",
+    "image": "assets/products/bbbs-1785795931148.png",
+    "defaultIntention": "أضحية",
+    "featured": false
   }
 ]
