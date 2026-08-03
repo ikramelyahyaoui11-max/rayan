@@ -263,13 +263,28 @@ addProductBtn.addEventListener('click', async () => {
 let saveInProgress = false;
 let saveQueued = false;
 let saveDebounceTimer = null;
+let saveDebouncePending = false;
+
+// Warn before leaving the page while a save is pending/in-flight, so a
+// reflex refresh (e.g. right after clicking a button) can't silently
+// cancel the request before GitHub receives it.
+window.addEventListener('beforeunload', (e) => {
+  if (saveInProgress || saveDebouncePending) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
 
 // Batches rapid successive field edits into a single save instead of
 // firing one GitHub API round-trip per field, which made editing feel slow.
 function scheduleSave() {
-  showStatus('...جاري تجهيز الحفظ', false);
+  showStatus('⏳ جاري تجهيز الحفظ... لا تُحدّث الصفحة الآن', false);
+  saveDebouncePending = true;
   clearTimeout(saveDebounceTimer);
-  saveDebounceTimer = setTimeout(() => { persistProducts(); }, 600);
+  saveDebounceTimer = setTimeout(() => {
+    saveDebouncePending = false;
+    persistProducts();
+  }, 600);
 }
 
 async function putProducts(attemptsLeft) {
@@ -308,14 +323,18 @@ async function persistProducts() {
     return;
   }
   saveInProgress = true;
-  showStatus('جاري الحفظ على GitHub...', false);
+  saveAllBtn.disabled = true;
+  addProductBtn.disabled = true;
+  showStatus('⏳ جاري الحفظ على GitHub... لا تُحدّث الصفحة ولا تغلقها', false);
   try {
     await putProducts(3);
-    showStatus('✅ تم الحفظ بنجاح! التغييرات ستظهر على الموقع خلال دقيقة تقريبًا.', false);
+    showStatus('✅ تم الحفظ بنجاح! التغييرات ستظهر على الموقع خلال دقيقة تقريبًا. يمكنك الآن تحديث الصفحة.', false);
   } catch (err) {
     showStatus(`فشل الحفظ: ${err.message}`, true);
   } finally {
     saveInProgress = false;
+    saveAllBtn.disabled = false;
+    addProductBtn.disabled = false;
     if (saveQueued) {
       saveQueued = false;
       persistProducts();
