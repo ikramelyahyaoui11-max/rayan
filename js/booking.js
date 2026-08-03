@@ -80,7 +80,8 @@ if (cartCheckoutData) {
     total += lineTotal;
     const row = document.createElement('div');
     row.className = 'cart-summary-row';
-    row.textContent = `${item.name} × ${item.qty} — ${lineTotal.toLocaleString('en-US')} ج.م`;
+    const noteText = item.note ? ` (الاسم: ${item.note})` : '';
+    row.textContent = `${item.name}${noteText} × ${item.qty} — ${lineTotal.toLocaleString('en-US')} ج.م`;
     summaryList.appendChild(row);
   });
   summaryTotal.textContent = `الإجمالي: ${total.toLocaleString('en-US')} ج.م`;
@@ -98,7 +99,7 @@ bookingForm.addEventListener('submit', (e) => {
     const total = checkoutCart.reduce((sum, item) => sum + item.price * item.qty, 0);
     orderLines = [
       'الطلبات:',
-      ...checkoutCart.map((item) => `- ${item.name} × ${item.qty} (${(item.price * item.qty).toLocaleString('en-US')} ج.م)`),
+      ...checkoutCart.map((item) => `- ${item.name}${item.note ? ' - الاسم: ' + item.note : ''} × ${item.qty} (${(item.price * item.qty).toLocaleString('en-US')} ج.م)`),
       `الإجمالي: ${total.toLocaleString('en-US')} ج.م`,
     ];
   } else {
