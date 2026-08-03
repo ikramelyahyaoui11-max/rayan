@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-labelledby="rayanLogoTitle">
+  <title id="rayanLogoTitle">شعار مؤسسة الريان</title>
+  <defs>
+    <clipPath id="circleClip">
+      <circle cx="120" cy="112" r="86"/>
+    </clipPath>
+  </defs>
+
+  <!-- outer badge rings -->
+  <circle cx="120" cy="112" r="98" fill="none" stroke="#1b6b3a" stroke-width="2" opacity="0.35"/>
+  <circle cx="120" cy="112" r="90" fill="#eef7ea" stroke="#1b6b3a" stroke-width="3"/>
+
+  <g clip-path="url(#circleClip)">
+    <!-- diagonal split: orange upper-left, green lower-right -->
+    <rect x="10" y="10" width="220" height="220" fill="#f5a623"/>
+    <path d="M 40 34 L 214 34 L 214 208 Z" fill="#1b6b3a"/>
+
+    <!-- wheat ears on the green side -->
+    <g fill="#eef7ea" opacity="0.95">
+      <ellipse cx="150" cy="66" rx="7" ry="12" transform="rotate(35 150 66)"/>
+      <ellipse cx="164" cy="80" rx="7" ry="12" transform="rotate(35 164 80)"/>
+      <ellipse cx="136" cy="80" rx="7" ry="12" transform="rotate(35 136 80)"/>
+      <ellipse cx="150" cy="94" rx="7" ry="12" transform="rotate(35 150 94)"/>
+      <ellipse cx="164" cy="108" rx="7" ry="12" transform="rotate(35 164 108)"/>
+      <ellipse cx="178" cy="94" rx="7" ry="12" transform="rotate(35 178 94)"/>
+      <ellipse cx="178" cy="122" rx="7" ry="12" transform="rotate(35 178 122)"/>
+      <ellipse cx="164" cy="136" rx="7" ry="12" transform="rotate(35 164 136)"/>
+      <ellipse cx="192" cy="108" rx="7" ry="12" transform="rotate(35 192 108)"/>
+    </g>
+
+    <!-- ram silhouette on the green side -->
+    <g fill="#eef7ea">
+      <path d="M172 150
+               c-10 -4 -16 -14 -14 -24
+               c1 -7 8 -12 15 -10
+               c3 -6 10 -9 16 -6
+               c8 -13 24 -13 30 2
+               c5 -3 12 0 13 7
+               c1 6 -3 11 -9 12
+               c2 8 -3 16 -12 17
+               c-2 6 -9 9 -15 6
+               c-6 5 -15 3 -18 -4
+               z" />
+      <path d="M214 128 c8 -10 6 -22 -2 -28 c6 4 10 14 6 24 z" opacity="0.9"/>
+      <path d="M176 148 c-14 4 -22 16 -22 28 l6 2 c1 -11 8 -20 18 -24 z" opacity="0.9"/>
+    </g>
+  </g>
+
+  <!-- wordmark -->
+  <text x="120" y="205" text-anchor="middle" font-family="'Cairo', 'Tajawal', sans-serif" font-weight="800" font-size="30" fill="#1b6b3a">الريان</text>
+  <rect x="150" y="182" width="7" height="7" fill="#f5a623" transform="rotate(45 153.5 185.5)"/>
+  <rect x="86" y="182" width="7" height="7" fill="#f5a623" transform="rotate(45 89.5 185.5)"/>
+</svg>

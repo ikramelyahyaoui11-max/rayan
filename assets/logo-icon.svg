@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-labelledby="rayanIconTitle">
+  <title id="rayanIconTitle">أيقونة مؤسسة الريان</title>
+  <defs>
+    <clipPath id="iconCircleClip">
+      <circle cx="100" cy="100" r="80"/>
+    </clipPath>
+  </defs>
+
+  <circle cx="100" cy="100" r="88" fill="#eef7ea" stroke="#1b6b3a" stroke-width="4"/>
+
+  <g clip-path="url(#iconCircleClip)">
+    <rect x="0" y="0" width="200" height="200" fill="#f5a623"/>
+    <path d="M 24 20 L 192 20 L 192 188 Z" fill="#1b6b3a"/>
+
+    <g fill="#eef7ea">
+      <ellipse cx="140" cy="60" rx="14" ry="22" transform="rotate(35 140 60)"/>
+      <ellipse cx="164" cy="92" rx="14" ry="22" transform="rotate(35 164 92)"/>
+      <ellipse cx="168" cy="130" rx="14" ry="22" transform="rotate(35 168 130)"/>
+    </g>
+  </g>
+
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#1b6b3a" stroke-width="4"/>
+</svg>
