@@ -1093,7 +1093,17 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
 .product-detail-info .stars { display: inline-block; margin-bottom: 10px; }
 .product-detail-info .product-desc { min-height: 0; margin-bottom: 16px; }
 .product-detail-info .product-price { text-align: right; }
-.product-detail-info .form-row { margin: 20px 0; }
+.product-form {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 22px 24px 24px;
+  margin-top: 20px;
+}
+.product-detail-info .form-row { margin: 18px 0; }
+.product-detail-info .form-row:first-child { margin-top: 0; }
+.product-detail-info .form-row input,
+.product-detail-info .form-row select { background: var(--white); }
 .product-actions-detail {
   align-items: stretch;
 }
