@@ -38,5 +38,15 @@
     "image": "assets/products/maaz.png",
     "defaultIntention": "عقيقة",
     "featured": false
+  },
+  {
+    "id": "cdptest1785795594061",
+    "name": "CDP TEST",
+    "tag": "test",
+    "price": 5,
+    "desc": "automated test",
+    "image": "assets/products/kharouf.png",
+    "defaultIntention": "أضحية",
+    "featured": false
   }
 ]
