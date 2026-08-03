@@ -38,15 +38,5 @@
         "image":  "assets/products/maaz.png",
         "defaultIntention":  "عقيقة",
         "featured":  false
-    },
-    {
-        "id":  "debugtest123",
-        "name":  "TEST DEBUG",
-        "tag":  "test",
-        "price":  1,
-        "desc":  "test",
-        "image":  "assets/products/kharouf.png",
-        "defaultIntention":  "أضحية",
-        "featured":  false
     }
 ]
