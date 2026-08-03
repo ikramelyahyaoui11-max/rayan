@@ -1,7 +1,7 @@
 [
   {
     "id": "kharouf",
-    "name": "خروف vvv",
+    "name": "خروف",
     "tag": "الأكثر طلبًا",
     "price": 2800,
     "desc": "ذبح، سلخ، توزيع كامل على المحتاجين، وتوثيق بالاسم",
@@ -37,16 +37,6 @@
     "desc": "مناسب للعقيقة أو الأضحية، ذبح وتوثيق كامل وتوزيع على الفقراء",
     "image": "assets/products/maaz.png",
     "defaultIntention": "عقيقة",
-    "featured": false
-  },
-  {
-    "id": "bbbs",
-    "name": "sssdddd",
-    "tag": "jjjjduj",
-    "price": 18,
-    "desc": "dds",
-    "image": "assets/products/bbbs-1785795958275.png",
-    "defaultIntention": "أضحية",
     "featured": false
   }
 ]
