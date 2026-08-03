@@ -38,15 +38,5 @@
     "image": "assets/products/maaz.png",
     "defaultIntention": "عقيقة",
     "featured": false
-  },
-  {
-    "id": "JUHU",
-    "name": "JJJJ",
-    "tag": "IKOOO",
-    "price": 2345,
-    "desc": "IIIIK",
-    "image": "assets/products/JUHU-1785774313640.png",
-    "defaultIntention": "عقيقة",
-    "featured": true
   }
 ]
