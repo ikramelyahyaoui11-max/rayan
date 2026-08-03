@@ -140,12 +140,12 @@ function renderProducts() {
     card.querySelector('.f-intention').value = product.defaultIntention;
     card.querySelector('.f-featured').checked = Boolean(product.featured);
 
-    card.querySelector('.f-name').addEventListener('change', (e) => { product.name = e.target.value; persistProducts(); });
-    card.querySelector('.f-tag').addEventListener('change', (e) => { product.tag = e.target.value; persistProducts(); });
-    card.querySelector('.f-price').addEventListener('change', (e) => { product.price = Number(e.target.value); persistProducts(); });
-    card.querySelector('.f-desc').addEventListener('change', (e) => { product.desc = e.target.value; persistProducts(); });
-    card.querySelector('.f-intention').addEventListener('change', (e) => { product.defaultIntention = e.target.value; persistProducts(); });
-    card.querySelector('.f-featured').addEventListener('change', (e) => { product.featured = e.target.checked; persistProducts(); });
+    card.querySelector('.f-name').addEventListener('change', (e) => { product.name = e.target.value; scheduleSave(); });
+    card.querySelector('.f-tag').addEventListener('change', (e) => { product.tag = e.target.value; scheduleSave(); });
+    card.querySelector('.f-price').addEventListener('change', (e) => { product.price = Number(e.target.value); scheduleSave(); });
+    card.querySelector('.f-desc').addEventListener('change', (e) => { product.desc = e.target.value; scheduleSave(); });
+    card.querySelector('.f-intention').addEventListener('change', (e) => { product.defaultIntention = e.target.value; scheduleSave(); });
+    card.querySelector('.f-featured').addEventListener('change', (e) => { product.featured = e.target.checked; scheduleSave(); });
 
     card.querySelector('.admin-delete-btn').addEventListener('click', () => {
       if (!confirm(`هل تريد حذف "${product.name}"؟`)) return;
@@ -262,6 +262,15 @@ addProductBtn.addEventListener('click', async () => {
 // ===================== Save all =====================
 let saveInProgress = false;
 let saveQueued = false;
+let saveDebounceTimer = null;
+
+// Batches rapid successive field edits into a single save instead of
+// firing one GitHub API round-trip per field, which made editing feel slow.
+function scheduleSave() {
+  showStatus('...جاري تجهيز الحفظ', false);
+  clearTimeout(saveDebounceTimer);
+  saveDebounceTimer = setTimeout(() => { persistProducts(); }, 600);
+}
 
 async function putProducts(attemptsLeft) {
   const res = await fetch(apiUrl(PRODUCTS_PATH), {
