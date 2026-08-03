@@ -60,11 +60,30 @@ backToTop.addEventListener('click', () => {
 const bookingForm = document.getElementById('bookingForm');
 const bookingType = document.getElementById('bookingType');
 
-const presetType = sessionStorage.getItem('rayan_order_type');
-if (presetType) {
-  bookingType.value = presetType;
-  sessionStorage.removeItem('rayan_order_type');
-  sessionStorage.removeItem('rayan_order_price');
+let checkoutCart = null;
+const cartCheckoutData = sessionStorage.getItem('rayan_cart_checkout');
+if (cartCheckoutData) {
+  checkoutCart = JSON.parse(cartCheckoutData);
+  sessionStorage.removeItem('rayan_cart_checkout');
+
+  document.getElementById('orderTypeRow').style.display = 'none';
+  bookingType.required = false;
+
+  const summaryBlock = document.getElementById('cartSummaryBlock');
+  const summaryList = document.getElementById('cartSummaryList');
+  const summaryTotal = document.getElementById('cartSummaryTotal');
+  summaryBlock.style.display = 'block';
+
+  let total = 0;
+  checkoutCart.forEach((item) => {
+    const lineTotal = item.price * item.qty;
+    total += lineTotal;
+    const row = document.createElement('div');
+    row.className = 'cart-summary-row';
+    row.textContent = `${item.name} × ${item.qty} — ${lineTotal.toLocaleString('en-US')} ج.م`;
+    summaryList.appendChild(row);
+  });
+  summaryTotal.textContent = `الإجمالي: ${total.toLocaleString('en-US')} ج.م`;
 }
 
 bookingForm.addEventListener('submit', (e) => {
@@ -73,18 +92,31 @@ bookingForm.addEventListener('submit', (e) => {
   const name = bookingForm.name.value.trim();
   const phone = bookingForm.phone.value.trim();
   const whatsapp = bookingForm.whatsapp.value.trim();
-  const type = bookingType.value;
-  const price = bookingType.selectedOptions[0]?.dataset.price || '';
+
+  let orderLines;
+  if (checkoutCart) {
+    const total = checkoutCart.reduce((sum, item) => sum + item.price * item.qty, 0);
+    orderLines = [
+      'الطلبات:',
+      ...checkoutCart.map((item) => `- ${item.name} × ${item.qty} (${(item.price * item.qty).toLocaleString('en-US')} ج.م)`),
+      `الإجمالي: ${total.toLocaleString('en-US')} ج.م`,
+    ];
+  } else {
+    const type = bookingType.value;
+    const price = bookingType.selectedOptions[0]?.dataset.price || '';
+    orderLines = [`نوع الطلب: ${type}`, price ? `السعر: ${price}` : ''];
+  }
 
   const message = [
     'مرحبًا، أرغب في حجز:',
     `الاسم: ${name}`,
     `رقم الهاتف: ${phone}`,
     whatsapp ? `رقم واتساب: ${whatsapp}` : '',
-    `نوع الطلب: ${type}`,
-    price ? `السعر: ${price}` : ''
+    ...orderLines,
   ].filter(Boolean).join('\n');
 
   const url = `https://wa.me/201008659399?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank', 'noopener');
+
+  if (checkoutCart) localStorage.removeItem('rayan_cart');
 });

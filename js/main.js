@@ -239,13 +239,117 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') showLightboxImage(currentIndex - 1);
 });
 
-// ===================== Product → booking handoff =====================
-document.querySelectorAll('[data-order-type]').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    sessionStorage.setItem('rayan_order_type', btn.dataset.orderType);
-    sessionStorage.setItem('rayan_order_price', btn.dataset.orderPrice);
+// ===================== Shopping cart =====================
+const CART_KEY = 'rayan_cart';
+const cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+
+const saveCart = () => localStorage.setItem(CART_KEY, JSON.stringify(cart));
+
+const cartFab = document.getElementById('cartFab');
+const cartBadge = document.getElementById('cartBadge');
+const cartDrawer = document.getElementById('cartDrawer');
+const cartOverlay = document.getElementById('cartOverlay');
+const cartClose = document.getElementById('cartClose');
+const cartItemsEl = document.getElementById('cartItems');
+const cartEmptyEl = document.getElementById('cartEmpty');
+const cartTotalEl = document.getElementById('cartTotal');
+const cartCheckoutBtn = document.getElementById('cartCheckout');
+
+function renderCart() {
+  const count = cart.reduce((sum, item) => sum + item.qty, 0);
+  cartBadge.textContent = String(count);
+  cartBadge.style.display = count > 0 ? 'flex' : 'none';
+
+  cartItemsEl.innerHTML = '';
+  cartEmptyEl.style.display = cart.length === 0 ? 'block' : 'none';
+
+  cart.forEach((item, index) => {
+    const row = document.createElement('div');
+    row.className = 'cart-item';
+    row.innerHTML = `
+      <div class="cart-item-info">
+        <h4>${item.name}</h4>
+        <span class="cart-item-price">${item.price.toLocaleString('en-US')} ج.م × ${item.qty}</span>
+      </div>
+      <div class="cart-item-qty">
+        <button type="button" class="qty-btn cart-qty-minus" aria-label="إنقاص الكمية">−</button>
+        <span class="qty-value">${item.qty}</span>
+        <button type="button" class="qty-btn cart-qty-plus" aria-label="زيادة الكمية">+</button>
+      </div>
+      <button type="button" class="cart-item-remove" aria-label="حذف">🗑️</button>
+    `;
+    row.querySelector('.cart-qty-minus').addEventListener('click', () => {
+      item.qty = Math.max(1, item.qty - 1);
+      saveCart();
+      renderCart();
+    });
+    row.querySelector('.cart-qty-plus').addEventListener('click', () => {
+      item.qty += 1;
+      saveCart();
+      renderCart();
+    });
+    row.querySelector('.cart-item-remove').addEventListener('click', () => {
+      cart.splice(index, 1);
+      saveCart();
+      renderCart();
+    });
+    cartItemsEl.appendChild(row);
+  });
+
+  const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+  cartTotalEl.textContent = `${total.toLocaleString('en-US')} ج.م`;
+}
+
+function openCart() {
+  cartDrawer.classList.add('open');
+  cartOverlay.classList.add('open');
+  cartDrawer.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+function closeCart() {
+  cartDrawer.classList.remove('open');
+  cartOverlay.classList.remove('open');
+  cartDrawer.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+function addToCart(name, price, qty) {
+  const existing = cart.find((item) => item.name === name);
+  if (existing) existing.qty += qty;
+  else cart.push({ name, price, qty });
+  saveCart();
+  renderCart();
+  openCart();
+}
+
+cartFab.addEventListener('click', openCart);
+cartClose.addEventListener('click', closeCart);
+cartOverlay.addEventListener('click', closeCart);
+
+document.querySelectorAll('.product-card[data-product]').forEach((card) => {
+  const name = card.dataset.product;
+  const price = Number(card.dataset.price);
+  const qtyValue = card.querySelector('.qty-value');
+
+  card.querySelector('.qty-minus').addEventListener('click', () => {
+    qtyValue.textContent = String(Math.max(1, Number(qtyValue.textContent) - 1));
+  });
+  card.querySelector('.qty-plus').addEventListener('click', () => {
+    qtyValue.textContent = String(Number(qtyValue.textContent) + 1);
+  });
+  card.querySelector('.add-to-cart-btn').addEventListener('click', () => {
+    addToCart(name, price, Number(qtyValue.textContent));
+    qtyValue.textContent = '1';
   });
 });
+
+cartCheckoutBtn.addEventListener('click', () => {
+  if (cart.length === 0) return;
+  sessionStorage.setItem('rayan_cart_checkout', JSON.stringify(cart));
+  window.location.href = 'booking.html';
+});
+
+renderCart();
 
 // ===================== Reveal on scroll =====================
 if ('IntersectionObserver' in window) {

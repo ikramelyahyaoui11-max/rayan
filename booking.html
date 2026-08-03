@@ -83,7 +83,7 @@
           <label for="bookingWhatsapp">رقم واتساب</label>
           <input type="tel" id="bookingWhatsapp" name="whatsapp" placeholder="01xxxxxxxxx (إن كان مختلفًا)">
         </div>
-        <div class="form-row">
+        <div class="form-row" id="orderTypeRow">
           <label for="bookingType">نوع الطلب</label>
           <select id="bookingType" name="type" required>
             <option value="" disabled selected>اختر نوع الطلب</option>
@@ -93,6 +93,11 @@
             <option value="صدقة جارية" data-price="حسب الرغبة">صدقة جارية</option>
             <option value="نذر وكفارة" data-price="حسب الحالة">نذر وكفارة</option>
           </select>
+        </div>
+        <div class="form-row cart-summary-block" id="cartSummaryBlock">
+          <label>ملخص الطلب</label>
+          <div class="cart-summary-list" id="cartSummaryList"></div>
+          <div class="cart-summary-total" id="cartSummaryTotal"></div>
         </div>
         <button type="submit" class="btn btn-primary btn-lg btn-block">إرسال الطلب عبر واتساب 💬</button>
       </form>

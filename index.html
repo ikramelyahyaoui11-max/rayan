@@ -237,26 +237,50 @@
       </div>
 
       <div class="grid grid-3 reveal-group">
-        <div class="card product-card">
+        <div class="card product-card" data-product="أضحية خروف" data-price="2800">
           <span class="product-tag">الأكثر طلبًا</span>
           <h3>أضحية خروف</h3>
           <p class="product-desc">ذبح، سلخ، توزيع كامل على المحتاجين، وتوثيق بالاسم</p>
+          <span class="stars">★★★★★</span>
           <div class="product-price">2,800 <span>ج.م</span></div>
-          <a href="booking.html" class="btn btn-primary btn-block" data-order-type="أضحية خروف" data-order-price="2,800 ج.م">احجز الآن</a>
+          <div class="product-actions">
+            <div class="qty-stepper">
+              <button type="button" class="qty-btn qty-minus" aria-label="إنقاص الكمية">−</button>
+              <span class="qty-value">1</span>
+              <button type="button" class="qty-btn qty-plus" aria-label="زيادة الكمية">+</button>
+            </div>
+            <button type="button" class="btn btn-primary btn-block add-to-cart-btn">🛒 أضف للسلة</button>
+          </div>
         </div>
-        <div class="card product-card featured">
+        <div class="card product-card featured" data-product="أضحية بقر (سُبع)" data-price="3600">
           <span class="product-tag">عرض العيد</span>
           <h3>أضحية بقر (سُبع)</h3>
           <p class="product-desc">حصة كاملة في الذبيحة مع توثيق فردي لكل مستفيد</p>
+          <span class="stars">★★★★★</span>
           <div class="product-price">3,600 <span>ج.م</span></div>
-          <a href="booking.html" class="btn btn-primary btn-block" data-order-type="أضحية بقر (سُبع)" data-order-price="3,600 ج.م">احجز الآن</a>
+          <div class="product-actions">
+            <div class="qty-stepper">
+              <button type="button" class="qty-btn qty-minus" aria-label="إنقاص الكمية">−</button>
+              <span class="qty-value">1</span>
+              <button type="button" class="qty-btn qty-plus" aria-label="زيادة الكمية">+</button>
+            </div>
+            <button type="button" class="btn btn-primary btn-block add-to-cart-btn">🛒 أضف للسلة</button>
+          </div>
         </div>
-        <div class="card product-card">
+        <div class="card product-card" data-product="عقيقة (شاة)" data-price="2800">
           <span class="product-tag">للمواليد</span>
           <h3>عقيقة (شاة)</h3>
           <p class="product-desc">ذبح باسم المولود، توثيق كامل، وتوزيع على الفقراء</p>
+          <span class="stars">★★★★★</span>
           <div class="product-price">2,800 <span>ج.م</span></div>
-          <a href="booking.html" class="btn btn-primary btn-block" data-order-type="عقيقة (شاة)" data-order-price="2,800 ج.م">احجز الآن</a>
+          <div class="product-actions">
+            <div class="qty-stepper">
+              <button type="button" class="qty-btn qty-minus" aria-label="إنقاص الكمية">−</button>
+              <span class="qty-value">1</span>
+              <button type="button" class="qty-btn qty-plus" aria-label="زيادة الكمية">+</button>
+            </div>
+            <button type="button" class="btn btn-primary btn-block add-to-cart-btn">🛒 أضف للسلة</button>
+          </div>
         </div>
       </div>
     </div>
@@ -501,6 +525,30 @@
 
 <a href="https://wa.me/201008659399" class="whatsapp-fab" target="_blank" rel="noopener" aria-label="تواصل معنا عبر واتساب">💬</a>
 <button class="back-to-top" id="backToTop" aria-label="العودة للأعلى">↑</button>
+
+<button class="cart-fab" id="cartFab" aria-label="عرض السلة">
+  🛒
+  <span class="cart-badge" id="cartBadge">0</span>
+</button>
+
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+  <div class="cart-drawer-header">
+    <h3>سلة الطلبات</h3>
+    <button class="cart-close" id="cartClose" aria-label="إغلاق">✕</button>
+  </div>
+  <div class="cart-drawer-body">
+    <p class="cart-empty" id="cartEmpty">السلة فارغة حاليًا</p>
+    <div class="cart-items" id="cartItems"></div>
+  </div>
+  <div class="cart-drawer-footer">
+    <div class="cart-total-row">
+      <span>الإجمالي</span>
+      <span id="cartTotal">0 ج.م</span>
+    </div>
+    <button type="button" class="btn btn-primary btn-lg btn-block" id="cartCheckout">إتمام الحجز عبر واتساب</button>
+  </div>
+</aside>
 
 <div class="lightbox" id="lightbox" aria-hidden="true">
   <button class="lightbox-close" id="lightboxClose" aria-label="إغلاق">✕</button>
