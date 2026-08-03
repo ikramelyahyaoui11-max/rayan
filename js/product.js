@@ -65,6 +65,7 @@ const PRODUCTS = [
     price: 2800,
     desc: 'ذبح، سلخ، توزيع كامل على المحتاجين، وتوثيق بالاسم',
     image: 'assets/gallery/rayan-11.jpg',
+    defaultIntention: 'أضحية',
   },
   {
     id: 'bakar',
@@ -73,6 +74,7 @@ const PRODUCTS = [
     price: 3600,
     desc: 'حصة كاملة في الذبيحة مع توثيق فردي لكل مستفيد',
     image: 'assets/gallery/rayan-27.jpg',
+    defaultIntention: 'أضحية',
   },
   {
     id: 'aqiqa',
@@ -81,6 +83,7 @@ const PRODUCTS = [
     price: 2800,
     desc: 'ذبح باسم المولود، توثيق كامل، وتوزيع على الفقراء',
     image: 'assets/gallery/rayan-45.jpg',
+    defaultIntention: 'عقيقة',
   },
 ];
 
@@ -94,6 +97,7 @@ document.getElementById('productTag').textContent = product.tag;
 document.getElementById('productName').textContent = product.name;
 document.getElementById('productDesc').textContent = product.desc;
 document.getElementById('productPrice').innerHTML = `${product.price.toLocaleString('en-US')} <span>ج.م</span>`;
+document.getElementById('productIntention').value = product.defaultIntention;
 
 // ===================== Quantity stepper =====================
 let qty = 1;
@@ -109,8 +113,18 @@ document.getElementById('qtyPlus').addEventListener('click', () => {
 
 // ===================== Add to cart =====================
 const productNoteEl = document.getElementById('productNote');
-document.getElementById('addToCartBtn').addEventListener('click', () => {
-  window.RayanCart.add(product.name, product.price, qty, productNoteEl.value.trim());
+const productAddonsEl = document.getElementById('productAddons');
+const productIntentionEl = document.getElementById('productIntention');
+const productDeliveryEl = document.getElementById('productDelivery');
+
+document.getElementById('productForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  window.RayanCart.add(product.name, product.price, qty, {
+    note: productNoteEl.value.trim(),
+    intention: productIntentionEl.value,
+    addons: productAddonsEl.value,
+    delivery: productDeliveryEl.value,
+  });
   qty = 1;
   qtyValueEl.textContent = '1';
   productNoteEl.value = '';

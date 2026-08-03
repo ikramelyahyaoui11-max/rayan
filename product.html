@@ -68,19 +68,45 @@
           <p class="product-desc" id="productDesc"></p>
           <div class="product-price" id="productPrice"></div>
 
-          <div class="form-row">
-            <label for="productNote">الاسم عند التوثيق (اختياري)</label>
-            <input type="text" id="productNote" placeholder="مثال: أسرة أحمد محمد">
-          </div>
-
-          <div class="product-actions product-actions-detail">
-            <div class="qty-stepper">
-              <button type="button" class="qty-btn" id="qtyMinus" aria-label="إنقاص الكمية">−</button>
-              <span class="qty-value" id="qtyValue">1</span>
-              <button type="button" class="qty-btn" id="qtyPlus" aria-label="زيادة الكمية">+</button>
+          <form class="product-form" id="productForm">
+            <div class="form-row">
+              <label for="productAddons">إضافات على الطلب</label>
+              <select id="productAddons" required>
+                <option value="بدون إضافات">بدون إضافات</option>
+                <option value="فيديو توثيق إضافي">فيديو توثيق إضافي</option>
+                <option value="شهادة توثيق مطبوعة (PDF)">شهادة توثيق مطبوعة (PDF)</option>
+              </select>
             </div>
-            <button type="button" class="btn btn-primary btn-lg btn-block" id="addToCartBtn">🛒 أضف للسلة</button>
-          </div>
+            <div class="form-row">
+              <label for="productIntention">النية</label>
+              <select id="productIntention" required>
+                <option value="أضحية">أضحية</option>
+                <option value="عقيقة">عقيقة</option>
+                <option value="صدقة جارية">صدقة جارية</option>
+                <option value="نذر وكفارة">نذر وكفارة</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="productNote">الاسم عند التوثيق</label>
+              <input type="text" id="productNote" placeholder="مثال: أسرة أحمد محمد" required>
+            </div>
+            <div class="form-row">
+              <label for="productDelivery">التسليم</label>
+              <select id="productDelivery" required>
+                <option value="خلال 24 ساعة">التنفيذ خلال 24 ساعة</option>
+                <option value="خلال يومين">التنفيذ خلال يومين</option>
+              </select>
+            </div>
+
+            <div class="product-actions product-actions-detail">
+              <div class="qty-stepper">
+                <button type="button" class="qty-btn" id="qtyMinus" aria-label="إنقاص الكمية">−</button>
+                <span class="qty-value" id="qtyValue">1</span>
+                <button type="button" class="qty-btn" id="qtyPlus" aria-label="زيادة الكمية">+</button>
+              </div>
+              <button type="submit" class="btn btn-primary btn-lg btn-block">🛒 أضف للسلة</button>
+            </div>
+          </form>
         </div>
       </div>
 

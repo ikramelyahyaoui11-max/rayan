@@ -23,12 +23,18 @@ function renderCart() {
   cartEmptyEl.style.display = cart.length === 0 ? 'block' : 'none';
 
   cart.forEach((item, index) => {
+    const details = [];
+    if (item.intention) details.push(`النية: ${item.intention}`);
+    if (item.note) details.push(`الاسم: ${item.note}`);
+    if (item.addons && item.addons !== 'بدون إضافات') details.push(item.addons);
+    if (item.delivery) details.push(`التسليم: ${item.delivery}`);
+
     const row = document.createElement('div');
     row.className = 'cart-item';
     row.innerHTML = `
       <div class="cart-item-info">
         <h4>${item.name}</h4>
-        ${item.note ? `<span class="cart-item-note">✎ ${item.note}</span>` : ''}
+        ${details.length ? `<span class="cart-item-note">${details.join(' · ')}</span>` : ''}
         <span class="cart-item-price">${item.price.toLocaleString('en-US')} ج.م × ${item.qty}</span>
       </div>
       <div class="cart-item-qty">
@@ -73,10 +79,23 @@ function closeCart() {
   document.body.style.overflow = '';
 }
 
-function addToCart(name, price, qty, note) {
-  const existing = cart.find((item) => item.name === name && (item.note || '') === (note || ''));
+function addToCart(name, price, qty, details) {
+  details = details || {};
+  const note = details.note || '';
+  const intention = details.intention || '';
+  const addons = details.addons || '';
+  const delivery = details.delivery || '';
+
+  const matches = (item) =>
+    item.name === name &&
+    (item.note || '') === note &&
+    (item.intention || '') === intention &&
+    (item.addons || '') === addons &&
+    (item.delivery || '') === delivery;
+
+  const existing = cart.find(matches);
   if (existing) existing.qty += qty;
-  else cart.push({ name, price, qty, note: note || '' });
+  else cart.push({ name, price, qty, note, intention, addons, delivery });
   saveCart();
   renderCart();
   openCart();
