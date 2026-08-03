@@ -239,23 +239,52 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') showLightboxImage(currentIndex - 1);
 });
 
-// ===================== Product cards (add to cart) =====================
-document.querySelectorAll('.product-card[data-product]').forEach((card) => {
-  const name = card.dataset.product;
-  const price = Number(card.dataset.price);
-  const qtyValue = card.querySelector('.qty-value');
+// ===================== Product cards (loaded from assets/data/products.json) =====================
+fetch('assets/data/products.json')
+  .then((res) => res.json())
+  .then((products) => {
+    const productsGrid = document.getElementById('productsGrid');
 
-  card.querySelector('.qty-minus').addEventListener('click', () => {
-    qtyValue.textContent = String(Math.max(1, Number(qtyValue.textContent) - 1));
+    products.forEach((product) => {
+      const card = document.createElement('div');
+      card.className = product.featured ? 'card product-card featured' : 'card product-card';
+      card.dataset.product = product.name;
+      card.dataset.price = product.price;
+      card.innerHTML = `
+        <a class="product-link" href="product.html?id=${product.id}">
+          <div class="product-card-image"><img src="${product.image}" alt="${product.name}" loading="lazy"></div>
+          <span class="product-tag">${product.tag}</span>
+          <h3>${product.name}</h3>
+          <p class="product-desc">${product.desc}</p>
+          <span class="stars">★★★★★</span>
+          <div class="product-price">${product.price.toLocaleString('en-US')} <span>ج.م</span></div>
+        </a>
+        <div class="product-actions">
+          <div class="qty-stepper">
+            <button type="button" class="qty-btn qty-minus" aria-label="إنقاص الكمية">−</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn qty-plus" aria-label="زيادة الكمية">+</button>
+          </div>
+          <button type="button" class="btn btn-primary btn-block add-to-cart-btn">🛒 أضف للسلة</button>
+        </div>
+      `;
+
+      const qtyValue = card.querySelector('.qty-value');
+      card.querySelector('.qty-minus').addEventListener('click', () => {
+        qtyValue.textContent = String(Math.max(1, Number(qtyValue.textContent) - 1));
+      });
+      card.querySelector('.qty-plus').addEventListener('click', () => {
+        qtyValue.textContent = String(Number(qtyValue.textContent) + 1);
+      });
+      card.querySelector('.add-to-cart-btn').addEventListener('click', () => {
+        window.RayanCart.add(product.name, product.price, Number(qtyValue.textContent));
+        qtyValue.textContent = '1';
+      });
+
+      card.classList.add('in-view');
+      productsGrid.appendChild(card);
+    });
   });
-  card.querySelector('.qty-plus').addEventListener('click', () => {
-    qtyValue.textContent = String(Number(qtyValue.textContent) + 1);
-  });
-  card.querySelector('.add-to-cart-btn').addEventListener('click', () => {
-    window.RayanCart.add(name, price, Number(qtyValue.textContent));
-    qtyValue.textContent = '1';
-  });
-});
 
 // ===================== Reveal on scroll =====================
 if ('IntersectionObserver' in window) {
