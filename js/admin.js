@@ -140,17 +140,18 @@ function renderProducts() {
     card.querySelector('.f-intention').value = product.defaultIntention;
     card.querySelector('.f-featured').checked = Boolean(product.featured);
 
-    card.querySelector('.f-name').addEventListener('input', (e) => { product.name = e.target.value; });
-    card.querySelector('.f-tag').addEventListener('input', (e) => { product.tag = e.target.value; });
-    card.querySelector('.f-price').addEventListener('input', (e) => { product.price = Number(e.target.value); });
-    card.querySelector('.f-desc').addEventListener('input', (e) => { product.desc = e.target.value; });
-    card.querySelector('.f-intention').addEventListener('change', (e) => { product.defaultIntention = e.target.value; });
-    card.querySelector('.f-featured').addEventListener('change', (e) => { product.featured = e.target.checked; });
+    card.querySelector('.f-name').addEventListener('change', (e) => { product.name = e.target.value; persistProducts(); });
+    card.querySelector('.f-tag').addEventListener('change', (e) => { product.tag = e.target.value; persistProducts(); });
+    card.querySelector('.f-price').addEventListener('change', (e) => { product.price = Number(e.target.value); persistProducts(); });
+    card.querySelector('.f-desc').addEventListener('change', (e) => { product.desc = e.target.value; persistProducts(); });
+    card.querySelector('.f-intention').addEventListener('change', (e) => { product.defaultIntention = e.target.value; persistProducts(); });
+    card.querySelector('.f-featured').addEventListener('change', (e) => { product.featured = e.target.checked; persistProducts(); });
 
     card.querySelector('.admin-delete-btn').addEventListener('click', () => {
       if (!confirm(`هل تريد حذف "${product.name}"؟`)) return;
       products.splice(index, 1);
       renderProducts();
+      persistProducts();
     });
 
     card.querySelector('.admin-image-input').addEventListener('change', async (e) => {
@@ -161,7 +162,7 @@ function renderProducts() {
         const path = await uploadImage(file, product.id);
         product.image = path;
         card.querySelector('.admin-product-image img').src = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${path}`;
-        showStatus('تم رفع الصورة. لا تنسَ الضغط على "حفظ كل التغييرات".', false);
+        await persistProducts();
       } catch (err) {
         showStatus(`فشل رفع الصورة: ${err.message}`, true);
       }
@@ -255,11 +256,11 @@ addProductBtn.addEventListener('click', async () => {
   document.getElementById('newImage').value = '';
 
   renderProducts();
-  showStatus('تمت إضافة المنتج محليًا. اضغط "حفظ كل التغييرات" لنشره على الموقع.', false);
+  await persistProducts();
 });
 
 // ===================== Save all =====================
-saveAllBtn.addEventListener('click', async () => {
+async function persistProducts() {
   showStatus('جاري الحفظ على GitHub...', false);
   try {
     const res = await fetch(apiUrl(PRODUCTS_PATH), {
@@ -279,10 +280,14 @@ saveAllBtn.addEventListener('click', async () => {
     const data = await res.json();
     productsSha = data.content.sha;
     showStatus('✅ تم الحفظ بنجاح! التغييرات ستظهر على الموقع خلال دقيقة تقريبًا.', false);
+    return true;
   } catch (err) {
     showStatus(`فشل الحفظ: ${err.message}`, true);
+    return false;
   }
-});
+}
+
+saveAllBtn.addEventListener('click', persistProducts);
 
 // ===================== Init =====================
 if (localStorage.getItem(TOKEN_KEY)) {

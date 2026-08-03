@@ -57,7 +57,7 @@ backToTop.addEventListener('click', () => {
 });
 
 // ===================== Product data (loaded from assets/data/products.json) =====================
-fetch('assets/data/products.json')
+fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' })
   .then((res) => res.json())
   .then((PRODUCTS) => {
     const params = new URLSearchParams(window.location.search);

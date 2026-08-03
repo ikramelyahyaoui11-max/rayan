@@ -240,7 +240,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ===================== Product cards (loaded from assets/data/products.json) =====================
-fetch('assets/data/products.json')
+fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' })
   .then((res) => res.json())
   .then((products) => {
     const productsGrid = document.getElementById('productsGrid');
