@@ -1065,18 +1065,26 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
 /* ===================== Product detail page ===================== */
 .product-detail {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  align-items: start;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 44px;
+  align-items: stretch;
   margin-bottom: 56px;
 }
-.product-detail-image { position: relative; }
+.product-detail-image {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  min-height: 380px;
+  max-height: 560px;
+}
 .product-detail-image img {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  height: 100%;
   object-fit: cover;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
+  display: block;
 }
 .product-detail-image .product-tag {
   position: absolute;
@@ -1087,17 +1095,17 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
 }
 .product-detail-info { text-align: right; }
 .product-detail-info h1 {
-  font-size: 28px;
+  font-size: 30px;
   margin: 4px 0 10px;
 }
 .product-detail-info .stars { display: inline-block; margin-bottom: 10px; }
-.product-detail-info .product-desc { min-height: 0; margin-bottom: 16px; }
+.product-detail-info .product-desc { min-height: 0; margin-bottom: 16px; font-size: 15.5px; }
 .product-detail-info .product-price { text-align: right; }
 .product-form {
   background: var(--cream);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 22px 24px 24px;
+  padding: 24px 26px 26px;
   margin-top: 20px;
 }
 .product-detail-info .form-row { margin: 18px 0; }
@@ -1105,41 +1113,66 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
 .product-detail-info .form-row input,
 .product-detail-info .form-row select { background: var(--white); }
 .product-actions-detail {
-  align-items: stretch;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
 }
-.product-actions-detail .qty-stepper { align-self: flex-start; }
+.product-actions-detail .btn-block { flex: 1; }
 
+.other-products-section { margin-top: 8px; }
 .other-products-section h3 { font-size: 20px; margin-bottom: 20px; }
 .other-products-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 .other-product-card {
   display: flex;
-  align-items: center;
-  gap: 14px;
+  flex-direction: column;
+  gap: 0;
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 12px;
+  overflow: hidden;
   color: inherit;
   text-decoration: none;
   transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
 }
 .other-product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
 .other-product-card img {
-  width: 72px; height: 72px;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
-  border-radius: var(--radius-sm);
   flex-shrink: 0;
 }
+.other-product-info { padding: 12px 14px 16px; text-align: center; }
 .other-product-info h4 { font-size: 15px; margin-bottom: 4px; }
 .other-product-info span { font-size: 14px; font-weight: 700; color: var(--green-dark); }
 
+@media (max-width: 860px) {
+  .other-products-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
 @media (max-width: 720px) {
-  .product-detail { grid-template-columns: 1fr; gap: 24px; }
-  .other-products-grid { grid-template-columns: 1fr; }
+  .product-detail { grid-template-columns: 1fr; gap: 20px; }
+  .product-detail-image {
+    position: static;
+    min-height: 0;
+    max-height: none;
+    aspect-ratio: 4 / 3;
+  }
+  .product-detail-info h1 { font-size: 24px; }
+  .product-form { padding: 20px; }
+  .product-actions-detail { flex-direction: column; align-items: stretch; }
+  .product-actions-detail .qty-stepper { align-self: center; }
+  .other-products-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .other-product-info { padding: 10px 10px 14px; }
+}
+
+@media (max-width: 480px) {
+  .other-products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .other-product-info h4 { font-size: 13.5px; }
+  .other-product-info span { font-size: 12.5px; }
 }
 
 /* ===================== Stats ===================== */
