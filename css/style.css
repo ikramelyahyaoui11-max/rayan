@@ -1112,6 +1112,15 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
 .product-detail-info .form-row:first-child { margin-top: 0; }
 .product-detail-info .form-row input,
 .product-detail-info .form-row select { background: var(--white); }
+.delivery-note {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
 .product-actions-detail {
   flex-direction: row;
   align-items: center;

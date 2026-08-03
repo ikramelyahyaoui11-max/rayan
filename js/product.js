@@ -132,7 +132,7 @@ document.getElementById('productForm').addEventListener('submit', (e) => {
     note: productNoteEl.value.trim(),
     intention: productIntentionEl.value,
     addons: productAddonsEl.value,
-    delivery: productDeliveryEl.value,
+    delivery: productDeliveryEl.dataset.value,
   });
   qty = 1;
   qtyValueEl.textContent = '1';
