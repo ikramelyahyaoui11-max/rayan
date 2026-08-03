@@ -70,7 +70,7 @@ const PRODUCTS = [
   {
     id: 'bakara',
     name: 'بقرة',
-    tag: 'عرض العيد',
+    tag: 'حصة كاملة',
     price: 3600,
     desc: 'ذبيحة كاملة الحجم، توثيق شامل وتوزيع على عدد أكبر من المستفيدين',
     image: 'assets/products/bakara.png',
