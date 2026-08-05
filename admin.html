@@ -48,58 +48,109 @@
 
   <!-- ===== Dashboard ===== -->
   <section class="admin-dashboard" id="dashboardSection" style="display:none;">
-    <div class="admin-toolbar">
-      <h2>إدارة المنتجات</h2>
-      <button type="button" class="btn btn-primary" id="saveAllBtn">💾 حفظ كل التغييرات على الموقع</button>
-    </div>
-    <p class="admin-status" id="statusMsg"></p>
 
-    <div class="admin-products" id="productsList"></div>
+    <nav class="admin-menu">
+      <button type="button" class="admin-menu-btn active" id="menuProductsBtn">📦 المنتجات</button>
+      <button type="button" class="admin-menu-btn" id="menuStatsBtn">📊 الإحصائيات</button>
+    </nav>
 
-    <div class="admin-add-card">
-      <h3>➕ إضافة منتج جديد</h3>
-      <div class="admin-form-grid">
-        <div class="form-row">
-          <label>معرف فريد (بالإنجليزية، بدون مسافات)</label>
-          <input type="text" id="newId" placeholder="مثال: goat2">
-        </div>
-        <div class="form-row">
-          <label>الاسم</label>
-          <input type="text" id="newName" placeholder="مثال: خروف كبير">
-        </div>
-        <div class="form-row">
-          <label>الوسم (Tag)</label>
-          <input type="text" id="newTag" placeholder="مثال: عرض خاص">
-        </div>
-        <div class="form-row">
-          <label>السعر (ج.م)</label>
-          <input type="number" id="newPrice" placeholder="2800">
-        </div>
-        <div class="form-row">
-          <label>النية الافتراضية</label>
-          <select id="newIntention">
-            <option value="أضحية">أضحية</option>
-            <option value="عقيقة">عقيقة</option>
-            <option value="صدقة">صدقة</option>
-            <option value="نذر">نذر</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label>الوصف</label>
-          <input type="text" id="newDesc" placeholder="وصف قصير للمنتج">
-        </div>
-        <div class="form-row">
-          <label>صورة المنتج</label>
-          <input type="file" id="newImage" accept="image/*">
-        </div>
+    <!-- ===== Products tab ===== -->
+    <div id="productsTab">
+      <div class="admin-toolbar">
+        <h2>إدارة المنتجات</h2>
+        <button type="button" class="btn btn-primary" id="saveAllBtn">💾 حفظ كل التغييرات على الموقع</button>
       </div>
-      <button type="button" class="btn btn-primary" id="addProductBtn">إضافة المنتج</button>
-      <p class="admin-error" id="addError"></p>
+      <p class="admin-status" id="statusMsg"></p>
+
+      <div class="admin-products" id="productsList"></div>
+
+      <div class="admin-add-card">
+        <h3>➕ إضافة منتج جديد</h3>
+        <div class="admin-form-grid">
+          <div class="form-row">
+            <label>معرف فريد (بالإنجليزية، بدون مسافات)</label>
+            <input type="text" id="newId" placeholder="مثال: goat2">
+          </div>
+          <div class="form-row">
+            <label>الاسم</label>
+            <input type="text" id="newName" placeholder="مثال: خروف كبير">
+          </div>
+          <div class="form-row">
+            <label>الوسم (Tag)</label>
+            <input type="text" id="newTag" placeholder="مثال: عرض خاص">
+          </div>
+          <div class="form-row">
+            <label>السعر (ج.م)</label>
+            <input type="number" id="newPrice" placeholder="2800">
+          </div>
+          <div class="form-row">
+            <label>النية الافتراضية</label>
+            <select id="newIntention">
+              <option value="أضحية">أضحية</option>
+              <option value="عقيقة">عقيقة</option>
+              <option value="صدقة">صدقة</option>
+              <option value="نذر">نذر</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label>الوصف</label>
+            <input type="text" id="newDesc" placeholder="وصف قصير للمنتج">
+          </div>
+          <div class="form-row">
+            <label>صورة المنتج</label>
+            <input type="file" id="newImage" accept="image/*">
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary" id="addProductBtn">إضافة المنتج</button>
+        <p class="admin-error" id="addError"></p>
+      </div>
     </div>
+
+    <!-- ===== Statistics tab ===== -->
+    <div id="statsTab" style="display:none;">
+
+      <!-- Setup form (shown until connected) -->
+      <div class="admin-stats-setup" id="statsSetup">
+        <h2>📊 ربط الإحصائيات</h2>
+        <p class="admin-hint">
+          لعرض عدد الزوار والطلبات، يجب ربط الموقع بخدمة GoatCounter المجانية (خطوة لمرة واحدة):
+          <br>1. أنشئي حسابًا مجانيًا على
+          <a href="https://www.goatcounter.com/" target="_blank" rel="noopener">goatcounter.com</a>
+          واختاري اسمًا للموقع (مثلًا: alrayan).
+          <br>2. من إعدادات الحساب (Settings → API) أنشئي "API Key" بصلاحية القراءة فقط (Read only) وألصقيه هنا.
+        </p>
+        <div class="form-row">
+          <label>اسم موقع GoatCounter (مثال: alrayan)</label>
+          <input type="text" id="statsSiteCode" placeholder="alrayan">
+        </div>
+        <div class="form-row">
+          <label>API Key (Read only)</label>
+          <input type="password" id="statsApiKey" placeholder="xxxxxxxxxxxxxxxxxxxxxxxx">
+        </div>
+        <button type="button" class="btn btn-primary" id="statsConnectBtn">ربط الإحصائيات</button>
+        <p class="admin-error" id="statsError"></p>
+      </div>
+
+      <!-- Stats display (shown once connected) -->
+      <div id="statsDisplay" style="display:none;">
+        <div class="admin-toolbar">
+          <h2>الإحصائيات</h2>
+          <button type="button" class="btn btn-outline" id="statsRefreshBtn">🔄 تحديث</button>
+        </div>
+        <p class="admin-status" id="statsStatusMsg"></p>
+        <div class="admin-stats-grid" id="statsGrid"></div>
+        <p class="admin-hint" style="margin-top:20px;">
+          للتفاصيل الكاملة والرسوم البيانية، يمكنك زيارة
+          <a id="statsFullLink" href="#" target="_blank" rel="noopener">لوحة تحكم GoatCounter</a>.
+        </p>
+        <button type="button" class="btn btn-outline" id="statsDisconnectBtn" style="margin-top:16px;">🔌 فصل الإحصائيات</button>
+      </div>
+    </div>
+
   </section>
 
 </main>
 
-<script src="js/admin.js?v=20260803a"></script>
+<script src="js/admin.js?v=20260805a"></script>
 </body>
 </html>

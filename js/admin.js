@@ -344,6 +344,130 @@ async function persistProducts() {
 
 saveAllBtn.addEventListener('click', persistProducts);
 
+// ===================== Menu tabs =====================
+const menuProductsBtn = document.getElementById('menuProductsBtn');
+const menuStatsBtn = document.getElementById('menuStatsBtn');
+const productsTab = document.getElementById('productsTab');
+const statsTab = document.getElementById('statsTab');
+
+menuProductsBtn.addEventListener('click', () => {
+  menuProductsBtn.classList.add('active');
+  menuStatsBtn.classList.remove('active');
+  productsTab.style.display = 'block';
+  statsTab.style.display = 'none';
+});
+
+menuStatsBtn.addEventListener('click', () => {
+  menuStatsBtn.classList.add('active');
+  menuProductsBtn.classList.remove('active');
+  productsTab.style.display = 'none';
+  statsTab.style.display = 'block';
+  initStatsTab();
+});
+
+// ===================== Statistics (GoatCounter) =====================
+const STATS_SITE_KEY = 'rayan_stats_site';
+const STATS_APIKEY_KEY = 'rayan_stats_key';
+
+const statsSetup = document.getElementById('statsSetup');
+const statsDisplay = document.getElementById('statsDisplay');
+const statsSiteCode = document.getElementById('statsSiteCode');
+const statsApiKey = document.getElementById('statsApiKey');
+const statsConnectBtn = document.getElementById('statsConnectBtn');
+const statsError = document.getElementById('statsError');
+const statsGrid = document.getElementById('statsGrid');
+const statsStatusMsg = document.getElementById('statsStatusMsg');
+const statsRefreshBtn = document.getElementById('statsRefreshBtn');
+const statsDisconnectBtn = document.getElementById('statsDisconnectBtn');
+const statsFullLink = document.getElementById('statsFullLink');
+
+function initStatsTab() {
+  const site = localStorage.getItem(STATS_SITE_KEY);
+  const key = localStorage.getItem(STATS_APIKEY_KEY);
+  if (site && key) {
+    statsSetup.style.display = 'none';
+    statsDisplay.style.display = 'block';
+    statsFullLink.href = `https://${site}.goatcounter.com/`;
+    loadStats();
+  } else {
+    statsSetup.style.display = 'block';
+    statsDisplay.style.display = 'none';
+  }
+}
+
+statsConnectBtn.addEventListener('click', () => {
+  const site = statsSiteCode.value.trim();
+  const key = statsApiKey.value.trim();
+  statsError.textContent = '';
+  if (!site || !key) {
+    statsError.textContent = 'الرجاء تعبئة اسم الموقع و API Key.';
+    return;
+  }
+  localStorage.setItem(STATS_SITE_KEY, site);
+  localStorage.setItem(STATS_APIKEY_KEY, key);
+  initStatsTab();
+});
+
+statsDisconnectBtn.addEventListener('click', () => {
+  localStorage.removeItem(STATS_SITE_KEY);
+  localStorage.removeItem(STATS_APIKEY_KEY);
+  statsSiteCode.value = '';
+  statsApiKey.value = '';
+  initStatsTab();
+});
+
+statsRefreshBtn.addEventListener('click', loadStats);
+
+async function goatFetch(site, key, path) {
+  const res = await fetch(`https://${site}.goatcounter.com/api/v0/${path}`, {
+    headers: { Authorization: `Bearer ${key}` },
+  });
+  if (!res.ok) throw new Error(`GoatCounter API error: ${res.status}`);
+  return res.json();
+}
+
+function statCard(num, label) {
+  const div = document.createElement('div');
+  div.className = 'admin-stat-card';
+  div.innerHTML = `<div class="num">${num}</div><div class="label">${label}</div>`;
+  return div;
+}
+
+async function loadStats() {
+  const site = localStorage.getItem(STATS_SITE_KEY);
+  const key = localStorage.getItem(STATS_APIKEY_KEY);
+  if (!site || !key) return;
+
+  statsStatusMsg.textContent = 'جاري التحميل...';
+  statsStatusMsg.className = 'admin-status';
+  statsGrid.innerHTML = '';
+
+  try {
+    const totalData = await goatFetch(site, key, 'stats/total?start=2020-01-01');
+    let whatsappClicks = '—';
+    try {
+      const hitsData = await goatFetch(site, key, 'stats/hits?path=/click-whatsapp-order&start=2020-01-01');
+      if (hitsData && hitsData.hits && hitsData.hits.length) {
+        whatsappClicks = hitsData.hits[0].count ?? hitsData.hits[0].count_unique ?? 0;
+      } else {
+        whatsappClicks = 0;
+      }
+    } catch (e) { /* keep placeholder, non-critical */ }
+
+    const totalViews = totalData.total ?? '—';
+    const totalVisits = totalData.total_utc ?? totalData.total ?? '—';
+
+    statsGrid.appendChild(statCard(typeof totalViews === 'number' ? totalViews.toLocaleString('en-US') : totalViews, 'إجمالي مشاهدات الصفحات'));
+    statsGrid.appendChild(statCard(typeof totalVisits === 'number' ? totalVisits.toLocaleString('en-US') : totalVisits, 'إجمالي الزيارات'));
+    statsGrid.appendChild(statCard(typeof whatsappClicks === 'number' ? whatsappClicks.toLocaleString('en-US') : whatsappClicks, 'ضغطات "إرسال الطلب عبر واتساب"'));
+
+    statsStatusMsg.textContent = '';
+  } catch (err) {
+    statsStatusMsg.textContent = `تعذر تحميل الإحصائيات: ${err.message}. تأكدي من صحة اسم الموقع و API Key، أو استخدمي الرابط أدناه لعرض اللوحة الكاملة.`;
+    statsStatusMsg.className = 'admin-status admin-status-error';
+  }
+}
+
 // ===================== Init =====================
 if (localStorage.getItem(TOKEN_KEY)) {
   showDashboard();
