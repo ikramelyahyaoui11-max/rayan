@@ -42,7 +42,11 @@ function apiUrl(path) {
 
 function showStatus(message, isError) {
   statusMsg.textContent = message;
-  statusMsg.className = isError ? 'admin-status admin-status-error' : 'admin-status admin-status-ok';
+  if (!message) {
+    statusMsg.className = 'mb-3';
+    return;
+  }
+  statusMsg.className = `alert ${isError ? 'alert-danger' : 'alert-success'} py-2 px-3 small mb-3`;
 }
 
 // ===================== Auth =====================
@@ -95,43 +99,51 @@ function renderProducts() {
   productsList.innerHTML = '';
   products.forEach((product, index) => {
     const card = document.createElement('div');
-    card.className = 'admin-product-card';
+    card.className = 'card admin-card admin-product-card';
     card.innerHTML = `
-      <div class="admin-product-image">
-        <img src="${product.image}" alt="${product.name}">
-        <input type="file" class="admin-image-input" accept="image/*">
-      </div>
-      <div class="admin-product-fields">
-        <div class="form-row">
-          <label>الاسم</label>
-          <input type="text" class="f-name" value="${product.name}">
+      <div class="card-body p-3">
+        <div class="row g-3">
+          <div class="col-md-3 text-center">
+            <img src="${product.image}" alt="${product.name}" class="img-fluid rounded-3 mb-2 admin-product-thumb">
+            <input type="file" class="form-control form-control-sm admin-image-input" accept="image/*">
+          </div>
+          <div class="col-md-9">
+            <div class="row g-2 text-start">
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">الاسم</label>
+                <input type="text" class="form-control form-control-sm f-name" value="${product.name}">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">الوسم (Tag)</label>
+                <input type="text" class="form-control form-control-sm f-tag" value="${product.tag}">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">السعر (ج.م)</label>
+                <input type="number" class="form-control form-control-sm f-price" value="${product.price}">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">النية الافتراضية</label>
+                <select class="form-select form-select-sm f-intention">
+                  <option value="أضحية">أضحية</option>
+                  <option value="عقيقة">عقيقة</option>
+                  <option value="صدقة">صدقة</option>
+                  <option value="نذر">نذر</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold mb-1">الوصف</label>
+                <input type="text" class="form-control form-control-sm f-desc" value="${product.desc}">
+              </div>
+              <div class="col-12 d-flex align-items-center justify-content-between mt-2">
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input f-featured" id="featured-${product.id}">
+                  <label class="form-check-label small" for="featured-${product.id}">مميز (إطار برتقالي في الصفحة الرئيسية)</label>
+                </div>
+                <button type="button" class="btn btn-outline-danger btn-sm admin-delete-btn">🗑️ حذف المنتج</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="form-row">
-          <label>الوسم (Tag)</label>
-          <input type="text" class="f-tag" value="${product.tag}">
-        </div>
-        <div class="form-row">
-          <label>السعر (ج.م)</label>
-          <input type="number" class="f-price" value="${product.price}">
-        </div>
-        <div class="form-row">
-          <label>الوصف</label>
-          <input type="text" class="f-desc" value="${product.desc}">
-        </div>
-        <div class="form-row">
-          <label>النية الافتراضية</label>
-          <select class="f-intention">
-            <option value="أضحية">أضحية</option>
-            <option value="عقيقة">عقيقة</option>
-            <option value="صدقة">صدقة</option>
-            <option value="نذر">نذر</option>
-          </select>
-        </div>
-        <label class="admin-checkbox-row">
-          <input type="checkbox" class="f-featured">
-          مميز (إطار برتقالي في الصفحة الرئيسية)
-        </label>
-        <button type="button" class="btn btn-outline admin-delete-btn">🗑️ حذف المنتج</button>
       </div>
     `;
 
@@ -429,11 +441,18 @@ async function goatFetch(site, key, path) {
   return res.json();
 }
 
-function statCard(num, label) {
-  const div = document.createElement('div');
-  div.className = 'admin-stat-card';
-  div.innerHTML = `<div class="num">${num}</div><div class="label">${label}</div>`;
-  return div;
+function statCard(num, label, colorClass) {
+  const col = document.createElement('div');
+  col.className = 'col';
+  col.innerHTML = `
+    <div class="card admin-card admin-stat-card h-100 border-top border-4 ${colorClass}">
+      <div class="card-body text-center">
+        <div class="admin-stat-num">${num}</div>
+        <div class="text-muted small mt-1">${label}</div>
+      </div>
+    </div>
+  `;
+  return col;
 }
 
 async function loadStats() {
@@ -442,7 +461,7 @@ async function loadStats() {
   if (!site || !key) return;
 
   statsStatusMsg.textContent = 'جاري التحميل...';
-  statsStatusMsg.className = 'admin-status';
+  statsStatusMsg.className = 'mb-3';
   statsGrid.innerHTML = '';
 
   try {
@@ -457,16 +476,17 @@ async function loadStats() {
     const totalViews = totalData.total ?? '—';
     const totalVisits = totalData.total_utc ?? totalData.total ?? '—';
 
-    statsGrid.appendChild(statCard(typeof totalViews === 'number' ? totalViews.toLocaleString('en-US') : totalViews, 'إجمالي مشاهدات الصفحات'));
-    statsGrid.appendChild(statCard(typeof totalVisits === 'number' ? totalVisits.toLocaleString('en-US') : totalVisits, 'إجمالي الزيارات'));
-    statsGrid.appendChild(statCard(typeof whatsappClicks === 'number' ? whatsappClicks.toLocaleString('en-US') : whatsappClicks, 'ضغطات "إرسال الطلب عبر واتساب"'));
+    statsGrid.appendChild(statCard(typeof totalViews === 'number' ? totalViews.toLocaleString('en-US') : totalViews, 'إجمالي مشاهدات الصفحات', 'border-warning'));
+    statsGrid.appendChild(statCard(typeof totalVisits === 'number' ? totalVisits.toLocaleString('en-US') : totalVisits, 'إجمالي الزيارات', 'border-success'));
+    statsGrid.appendChild(statCard(typeof whatsappClicks === 'number' ? whatsappClicks.toLocaleString('en-US') : whatsappClicks, 'ضغطات "إرسال الطلب عبر واتساب"', 'border-info'));
 
     renderStatsChart(totalData.stats || []);
 
     statsStatusMsg.textContent = '';
+    statsStatusMsg.className = 'mb-3';
   } catch (err) {
     statsStatusMsg.textContent = `تعذر تحميل الإحصائيات: ${err.message}. تأكدي من صحة اسم الموقع و API Key، أو استخدمي الرابط أدناه لعرض اللوحة الكاملة.`;
-    statsStatusMsg.className = 'admin-status admin-status-error';
+    statsStatusMsg.className = 'alert alert-danger py-2 px-3 small mb-3';
   }
 }
 
