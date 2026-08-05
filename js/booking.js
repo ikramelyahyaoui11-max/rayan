@@ -129,6 +129,10 @@ bookingForm.addEventListener('submit', (e) => {
     ...orderLines,
   ].filter(Boolean).join('\n');
 
+  if (window.goatcounter && window.goatcounter.count) {
+    window.goatcounter.count({ path: 'click-whatsapp-order', title: 'WhatsApp order click', event: true });
+  }
+
   const url = `https://wa.me/201008659399?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank', 'noopener');
 
