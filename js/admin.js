@@ -460,11 +460,47 @@ async function loadStats() {
     statsGrid.appendChild(statCard(typeof totalVisits === 'number' ? totalVisits.toLocaleString('en-US') : totalVisits, 'إجمالي الزيارات'));
     statsGrid.appendChild(statCard(typeof whatsappClicks === 'number' ? whatsappClicks.toLocaleString('en-US') : whatsappClicks, 'ضغطات "إرسال الطلب عبر واتساب"'));
 
+    renderStatsChart(totalData.stats || []);
+
     statsStatusMsg.textContent = '';
   } catch (err) {
     statsStatusMsg.textContent = `تعذر تحميل الإحصائيات: ${err.message}. تأكدي من صحة اسم الموقع و API Key، أو استخدمي الرابط أدناه لعرض اللوحة الكاملة.`;
     statsStatusMsg.className = 'admin-status admin-status-error';
   }
+}
+
+let statsChartInstance = null;
+
+function renderStatsChart(dailyStats) {
+  const canvas = document.getElementById('statsChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+
+  const last14 = dailyStats.slice(-14);
+  const labels = last14.map((d) => d.day.slice(5));
+  const data = last14.map((d) => d.daily ?? 0);
+
+  if (statsChartInstance) statsChartInstance.destroy();
+  statsChartInstance = new Chart(canvas.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'مشاهدات',
+        data,
+        backgroundColor: '#f5a623',
+        borderRadius: 4,
+        maxBarThickness: 28,
+      }],
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { display: false } },
+        y: { beginAtZero: true, ticks: { color: 'rgba(255,255,255,0.6)', precision: 0 }, grid: { color: 'rgba(255,255,255,0.08)' } },
+      },
+    },
+  });
 }
 
 // ===================== Init =====================

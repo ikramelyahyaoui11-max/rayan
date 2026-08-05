@@ -132,18 +132,25 @@
       </div>
 
       <!-- Stats display (shown once connected) -->
-      <div id="statsDisplay" style="display:none;">
-        <div class="admin-toolbar">
-          <h2>الإحصائيات</h2>
-          <button type="button" class="btn btn-outline" id="statsRefreshBtn">🔄 تحديث</button>
+      <div id="statsDisplay" class="stats-dark" style="display:none;">
+        <div class="stats-dark-toolbar">
+          <h2>لوحة الإحصائيات</h2>
+          <button type="button" class="btn btn-outline stats-dark-btn" id="statsRefreshBtn">🔄 تحديث</button>
         </div>
         <p class="admin-status" id="statsStatusMsg"></p>
+
         <div class="admin-stats-grid" id="statsGrid"></div>
-        <p class="admin-hint" style="margin-top:20px;">
-          للتفاصيل الكاملة والرسوم البيانية، يمكنك زيارة
+
+        <div class="stats-chart-card">
+          <h3>مشاهدات الصفحات (آخر 14 يومًا)</h3>
+          <div class="stats-chart-wrap"><canvas id="statsChart" height="90"></canvas></div>
+        </div>
+
+        <p class="admin-hint stats-dark-hint">
+          للتفاصيل الكاملة والرسوم البيانية الإضافية، يمكنك زيارة
           <a id="statsFullLink" href="#" target="_blank" rel="noopener">لوحة تحكم GoatCounter</a>.
         </p>
-        <button type="button" class="btn btn-outline" id="statsDisconnectBtn" style="margin-top:16px;">🔌 فصل الإحصائيات</button>
+        <button type="button" class="btn btn-outline stats-dark-btn" id="statsDisconnectBtn">🔌 فصل الإحصائيات</button>
       </div>
     </div>
 
@@ -151,6 +158,7 @@
 
 </main>
 
-<script src="js/admin.js?v=20260805a"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="js/admin.js?v=20260805b"></script>
 </body>
 </html>
