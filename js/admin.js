@@ -396,13 +396,15 @@ function initStatsTab() {
 }
 
 statsConnectBtn.addEventListener('click', () => {
-  const site = statsSiteCode.value.trim();
+  let site = statsSiteCode.value.trim();
   const key = statsApiKey.value.trim();
   statsError.textContent = '';
   if (!site || !key) {
     statsError.textContent = 'الرجاء تعبئة اسم الموقع و API Key.';
     return;
   }
+  // Tolerate pasting a full URL instead of just the site code.
+  site = site.replace(/^https?:\/\//i, '').replace(/\.goatcounter\.com.*$/i, '').replace(/\/+$/, '');
   localStorage.setItem(STATS_SITE_KEY, site);
   localStorage.setItem(STATS_APIKEY_KEY, key);
   initStatsTab();
@@ -446,12 +448,9 @@ async function loadStats() {
     const totalData = await goatFetch(site, key, 'stats/total?start=2020-01-01');
     let whatsappClicks = '—';
     try {
-      const hitsData = await goatFetch(site, key, 'stats/hits?path=/click-whatsapp-order&start=2020-01-01');
-      if (hitsData && hitsData.hits && hitsData.hits.length) {
-        whatsappClicks = hitsData.hits[0].count ?? hitsData.hits[0].count_unique ?? 0;
-      } else {
-        whatsappClicks = 0;
-      }
+      const hitsData = await goatFetch(site, key, 'stats/hits?limit=100&start=2020-01-01');
+      const match = hitsData?.hits?.find((h) => h.path === '/click-whatsapp-order');
+      whatsappClicks = match ? (match.count ?? match.count_unique ?? 0) : 0;
     } catch (e) { /* keep placeholder, non-critical */ }
 
     const totalViews = totalData.total ?? '—';
