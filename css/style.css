@@ -1463,6 +1463,12 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   .section { padding: 60px 0; }
   .offer-inner { text-align: center; }
   .footer-grid { grid-template-columns: 1fr; }
+
+  .carousel-btn { display: none; }
+  .carousel { gap: 0; }
+  .carousel-slide { width: 78%; }
+  .carousel-slide img { height: 220px; }
+  .video-card video { height: 220px; }
 }
 
 /* ===================== Admin panel ===================== */
