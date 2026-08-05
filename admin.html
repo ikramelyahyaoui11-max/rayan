@@ -13,24 +13,10 @@
 </head>
 <body class="admin-body">
 
-<header class="admin-header">
-  <div class="container admin-header-inner">
-    <a href="index.html" class="brand">
-      <img src="assets/logo-real.jpg" alt="شعار مؤسسة الريان" class="brand-logo">
-      <span class="brand-text">
-        <strong>الريان</strong>
-        <small>لوحة التحكم</small>
-      </span>
-    </a>
-    <button type="button" class="btn btn-outline" id="logoutBtn" style="display:none;">تسجيل الخروج</button>
-  </div>
-</header>
-
-<main class="container admin-main">
-
   <!-- ===== Login ===== -->
   <section class="admin-login" id="loginSection">
     <div class="admin-login-card">
+      <img src="assets/logo-real.jpg" alt="شعار مؤسسة الريان" class="admin-login-logo">
       <h2>تسجيل الدخول</h2>
       <p class="admin-hint">
         الصق هنا GitHub Personal Access Token (fine-grained) الخاص بحسابك، بصلاحية
@@ -47,118 +33,146 @@
   </section>
 
   <!-- ===== Dashboard ===== -->
-  <section class="admin-dashboard" id="dashboardSection" style="display:none;">
+  <div class="admin-layout" id="dashboardSection" style="display:none;">
 
-    <nav class="admin-menu">
-      <button type="button" class="admin-menu-btn active" id="menuProductsBtn">📦 المنتجات</button>
-      <button type="button" class="admin-menu-btn" id="menuStatsBtn">📊 الإحصائيات</button>
-    </nav>
-
-    <!-- ===== Products tab ===== -->
-    <div id="productsTab">
-      <div class="admin-toolbar">
-        <h2>إدارة المنتجات</h2>
-        <button type="button" class="btn btn-primary" id="saveAllBtn">💾 حفظ كل التغييرات على الموقع</button>
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <img src="assets/logo-real.jpg" alt="شعار مؤسسة الريان">
+        <span>
+          <strong>الريان</strong>
+          <small>لوحة التحكم</small>
+        </span>
       </div>
-      <p class="admin-status" id="statusMsg"></p>
 
-      <div class="admin-products" id="productsList"></div>
+      <nav class="admin-sidebar-nav">
+        <button type="button" class="admin-nav-item active" id="menuProductsBtn">
+          <span class="admin-nav-icon">📦</span> المنتجات
+        </button>
+        <button type="button" class="admin-nav-item" id="menuStatsBtn">
+          <span class="admin-nav-icon">📊</span> الإحصائيات
+        </button>
+      </nav>
 
-      <div class="admin-add-card">
-        <h3>➕ إضافة منتج جديد</h3>
-        <div class="admin-form-grid">
-          <div class="form-row">
-            <label>معرف فريد (بالإنجليزية، بدون مسافات)</label>
-            <input type="text" id="newId" placeholder="مثال: goat2">
+      <a href="index.html" class="admin-nav-item admin-nav-secondary">
+        <span class="admin-nav-icon">🌐</span> عرض الموقع
+      </a>
+      <button type="button" class="admin-nav-item admin-nav-secondary" id="logoutBtn">
+        <span class="admin-nav-icon">🚪</span> تسجيل الخروج
+      </button>
+    </aside>
+
+    <div class="admin-content">
+      <header class="admin-topbar">
+        <h1 id="pageTitle">إدارة المنتجات</h1>
+      </header>
+
+      <main class="admin-main-inner">
+
+        <!-- ===== Products tab ===== -->
+        <div id="productsTab">
+          <div class="admin-toolbar">
+            <p class="admin-toolbar-desc">أضيفي، عدّلي، أو احذفي منتجات الموقع مباشرة</p>
+            <button type="button" class="btn btn-primary" id="saveAllBtn">💾 حفظ كل التغييرات على الموقع</button>
           </div>
-          <div class="form-row">
-            <label>الاسم</label>
-            <input type="text" id="newName" placeholder="مثال: خروف كبير">
-          </div>
-          <div class="form-row">
-            <label>الوسم (Tag)</label>
-            <input type="text" id="newTag" placeholder="مثال: عرض خاص">
-          </div>
-          <div class="form-row">
-            <label>السعر (ج.م)</label>
-            <input type="number" id="newPrice" placeholder="2800">
-          </div>
-          <div class="form-row">
-            <label>النية الافتراضية</label>
-            <select id="newIntention">
-              <option value="أضحية">أضحية</option>
-              <option value="عقيقة">عقيقة</option>
-              <option value="صدقة">صدقة</option>
-              <option value="نذر">نذر</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <label>الوصف</label>
-            <input type="text" id="newDesc" placeholder="وصف قصير للمنتج">
-          </div>
-          <div class="form-row">
-            <label>صورة المنتج</label>
-            <input type="file" id="newImage" accept="image/*">
+          <p class="admin-status" id="statusMsg"></p>
+
+          <div class="admin-products" id="productsList"></div>
+
+          <div class="admin-add-card">
+            <h3>➕ إضافة منتج جديد</h3>
+            <div class="admin-form-grid">
+              <div class="form-row">
+                <label>معرف فريد (بالإنجليزية، بدون مسافات)</label>
+                <input type="text" id="newId" placeholder="مثال: goat2">
+              </div>
+              <div class="form-row">
+                <label>الاسم</label>
+                <input type="text" id="newName" placeholder="مثال: خروف كبير">
+              </div>
+              <div class="form-row">
+                <label>الوسم (Tag)</label>
+                <input type="text" id="newTag" placeholder="مثال: عرض خاص">
+              </div>
+              <div class="form-row">
+                <label>السعر (ج.م)</label>
+                <input type="number" id="newPrice" placeholder="2800">
+              </div>
+              <div class="form-row">
+                <label>النية الافتراضية</label>
+                <select id="newIntention">
+                  <option value="أضحية">أضحية</option>
+                  <option value="عقيقة">عقيقة</option>
+                  <option value="صدقة">صدقة</option>
+                  <option value="نذر">نذر</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <label>الوصف</label>
+                <input type="text" id="newDesc" placeholder="وصف قصير للمنتج">
+              </div>
+              <div class="form-row">
+                <label>صورة المنتج</label>
+                <input type="file" id="newImage" accept="image/*">
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary" id="addProductBtn">إضافة المنتج</button>
+            <p class="admin-error" id="addError"></p>
           </div>
         </div>
-        <button type="button" class="btn btn-primary" id="addProductBtn">إضافة المنتج</button>
-        <p class="admin-error" id="addError"></p>
-      </div>
+
+        <!-- ===== Statistics tab ===== -->
+        <div id="statsTab" style="display:none;">
+
+          <!-- Setup form (shown until connected) -->
+          <div class="admin-stats-setup" id="statsSetup">
+            <h2>📊 ربط الإحصائيات</h2>
+            <p class="admin-hint">
+              لعرض عدد الزوار والطلبات، يجب ربط الموقع بخدمة GoatCounter المجانية (خطوة لمرة واحدة):
+              <br>1. أنشئي حسابًا مجانيًا على
+              <a href="https://www.goatcounter.com/" target="_blank" rel="noopener">goatcounter.com</a>
+              واختاري اسمًا للموقع (مثلًا: alrayan).
+              <br>2. من إعدادات الحساب (Settings → API) أنشئي "API Key" بصلاحية القراءة فقط (Read only) وألصقيه هنا.
+            </p>
+            <div class="form-row">
+              <label>اسم موقع GoatCounter (مثال: alrayan)</label>
+              <input type="text" id="statsSiteCode" placeholder="alrayan">
+            </div>
+            <div class="form-row">
+              <label>API Key (Read only)</label>
+              <input type="password" id="statsApiKey" placeholder="xxxxxxxxxxxxxxxxxxxxxxxx">
+            </div>
+            <button type="button" class="btn btn-primary" id="statsConnectBtn">ربط الإحصائيات</button>
+            <p class="admin-error" id="statsError"></p>
+          </div>
+
+          <!-- Stats display (shown once connected) -->
+          <div id="statsDisplay" style="display:none;">
+            <div class="admin-toolbar">
+              <p class="admin-toolbar-desc">نظرة عامة على أداء الموقع</p>
+              <button type="button" class="btn btn-outline" id="statsRefreshBtn">🔄 تحديث</button>
+            </div>
+            <p class="admin-status" id="statsStatusMsg"></p>
+
+            <div class="admin-stats-grid" id="statsGrid"></div>
+
+            <div class="stats-chart-card">
+              <h3>مشاهدات الصفحات (آخر 14 يومًا)</h3>
+              <div class="stats-chart-wrap"><canvas id="statsChart" height="90"></canvas></div>
+            </div>
+
+            <p class="admin-hint">
+              للتفاصيل الكاملة والرسوم البيانية الإضافية، يمكنك زيارة
+              <a id="statsFullLink" href="#" target="_blank" rel="noopener">لوحة تحكم GoatCounter</a>.
+            </p>
+            <button type="button" class="btn btn-outline" id="statsDisconnectBtn">🔌 فصل الإحصائيات</button>
+          </div>
+        </div>
+
+      </main>
     </div>
-
-    <!-- ===== Statistics tab ===== -->
-    <div id="statsTab" style="display:none;">
-
-      <!-- Setup form (shown until connected) -->
-      <div class="admin-stats-setup" id="statsSetup">
-        <h2>📊 ربط الإحصائيات</h2>
-        <p class="admin-hint">
-          لعرض عدد الزوار والطلبات، يجب ربط الموقع بخدمة GoatCounter المجانية (خطوة لمرة واحدة):
-          <br>1. أنشئي حسابًا مجانيًا على
-          <a href="https://www.goatcounter.com/" target="_blank" rel="noopener">goatcounter.com</a>
-          واختاري اسمًا للموقع (مثلًا: alrayan).
-          <br>2. من إعدادات الحساب (Settings → API) أنشئي "API Key" بصلاحية القراءة فقط (Read only) وألصقيه هنا.
-        </p>
-        <div class="form-row">
-          <label>اسم موقع GoatCounter (مثال: alrayan)</label>
-          <input type="text" id="statsSiteCode" placeholder="alrayan">
-        </div>
-        <div class="form-row">
-          <label>API Key (Read only)</label>
-          <input type="password" id="statsApiKey" placeholder="xxxxxxxxxxxxxxxxxxxxxxxx">
-        </div>
-        <button type="button" class="btn btn-primary" id="statsConnectBtn">ربط الإحصائيات</button>
-        <p class="admin-error" id="statsError"></p>
-      </div>
-
-      <!-- Stats display (shown once connected) -->
-      <div id="statsDisplay" class="stats-dark" style="display:none;">
-        <div class="stats-dark-toolbar">
-          <h2>لوحة الإحصائيات</h2>
-          <button type="button" class="btn btn-outline stats-dark-btn" id="statsRefreshBtn">🔄 تحديث</button>
-        </div>
-        <p class="admin-status" id="statsStatusMsg"></p>
-
-        <div class="admin-stats-grid" id="statsGrid"></div>
-
-        <div class="stats-chart-card">
-          <h3>مشاهدات الصفحات (آخر 14 يومًا)</h3>
-          <div class="stats-chart-wrap"><canvas id="statsChart" height="90"></canvas></div>
-        </div>
-
-        <p class="admin-hint stats-dark-hint">
-          للتفاصيل الكاملة والرسوم البيانية الإضافية، يمكنك زيارة
-          <a id="statsFullLink" href="#" target="_blank" rel="noopener">لوحة تحكم GoatCounter</a>.
-        </p>
-        <button type="button" class="btn btn-outline stats-dark-btn" id="statsDisconnectBtn">🔌 فصل الإحصائيات</button>
-      </div>
-    </div>
-
-  </section>
-
-</main>
+  </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-<script src="js/admin.js?v=20260805b"></script>
+<script src="js/admin.js?v=20260805c"></script>
 </body>
 </html>

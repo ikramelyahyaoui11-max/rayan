@@ -48,15 +48,13 @@ function showStatus(message, isError) {
 // ===================== Auth =====================
 function showDashboard() {
   loginSection.style.display = 'none';
-  dashboardSection.style.display = 'block';
-  logoutBtn.style.display = 'inline-flex';
+  dashboardSection.style.display = 'flex';
   loadProducts();
 }
 
 function showLogin(errorMsg) {
   loginSection.style.display = 'block';
   dashboardSection.style.display = 'none';
-  logoutBtn.style.display = 'none';
   loginError.textContent = errorMsg || '';
 }
 
@@ -349,12 +347,14 @@ const menuProductsBtn = document.getElementById('menuProductsBtn');
 const menuStatsBtn = document.getElementById('menuStatsBtn');
 const productsTab = document.getElementById('productsTab');
 const statsTab = document.getElementById('statsTab');
+const pageTitle = document.getElementById('pageTitle');
 
 menuProductsBtn.addEventListener('click', () => {
   menuProductsBtn.classList.add('active');
   menuStatsBtn.classList.remove('active');
   productsTab.style.display = 'block';
   statsTab.style.display = 'none';
+  pageTitle.textContent = 'إدارة المنتجات';
 });
 
 menuStatsBtn.addEventListener('click', () => {
@@ -362,6 +362,7 @@ menuStatsBtn.addEventListener('click', () => {
   menuProductsBtn.classList.remove('active');
   productsTab.style.display = 'none';
   statsTab.style.display = 'block';
+  pageTitle.textContent = 'الإحصائيات';
   initStatsTab();
 });
 
@@ -496,8 +497,8 @@ function renderStatsChart(dailyStats) {
       responsive: true,
       plugins: { legend: { display: false } },
       scales: {
-        x: { ticks: { color: 'rgba(255,255,255,0.6)' }, grid: { display: false } },
-        y: { beginAtZero: true, ticks: { color: 'rgba(255,255,255,0.6)', precision: 0 }, grid: { color: 'rgba(255,255,255,0.08)' } },
+        x: { ticks: { color: '#5b6b61' }, grid: { display: false } },
+        y: { beginAtZero: true, ticks: { color: '#5b6b61', precision: 0 }, grid: { color: 'rgba(18,74,40,0.08)' } },
       },
     },
   });
