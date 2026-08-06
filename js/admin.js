@@ -525,6 +525,16 @@ function renderStatsChart(dailyStats) {
 }
 
 // ===================== Init =====================
+// Support a one-time "magic link" (admin.html?token=...) that logs in
+// automatically on page load, bypassing the form/button entirely. Once used,
+// the token is saved to localStorage like normal and the URL is cleaned up.
+const urlParams = new URLSearchParams(window.location.search);
+const urlToken = urlParams.get('token');
+if (urlToken) {
+  localStorage.setItem(TOKEN_KEY, urlToken);
+  window.history.replaceState({}, '', window.location.pathname);
+}
+
 if (localStorage.getItem(TOKEN_KEY)) {
   showDashboard();
 } else {
