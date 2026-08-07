@@ -21,14 +21,13 @@
         <img src="assets/logo-real.jpg" alt="شعار مؤسسة الريان" class="rounded-3 mb-3" width="56" height="56">
         <h4 class="fw-bold mb-3">تسجيل الدخول</h4>
         <p class="text-muted small text-start">
-          الصق هنا GitHub Personal Access Token (fine-grained) الخاص بحسابك، بصلاحية
-          <strong>Contents: Read and write</strong> على مستودع <code>rayan</code> فقط.
-          <br><strong>هذه الخطوة مرة واحدة فقط</strong> — سيتم حفظ الدخول تلقائيًا على هذا الجهاز والمتصفح.
+          أدخلي كلمة المرور الخاصة بلوحة التحكم.
+          <br><strong>سيتم حفظ الدخول تلقائيًا على هذا الجهاز والمتصفح.</strong>
         </p>
         <form id="loginForm" autocomplete="off">
           <div class="mb-3 text-start">
-            <label for="tokenInput" class="form-label small fw-bold">GitHub Token</label>
-            <input type="text" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="form-control" id="tokenInput" name="rayan_gh_token" placeholder="ghp_xxxxxxxxxxxx">
+            <label for="tokenInput" class="form-label small fw-bold">كلمة المرور</label>
+            <input type="password" autocomplete="off" class="form-control" id="tokenInput" name="rayan_pw" placeholder="••••••••">
           </div>
           <button type="submit" class="btn btn-admin-primary w-100" id="loginBtn">دخول</button>
           <p class="text-danger small mt-2 mb-0" id="loginError"></p>
@@ -185,7 +184,7 @@
     </div>
   </div>
 
-<script src="js/admin.js?v=20260807a"></script>
+<script src="js/admin.js?v=20260807b"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4" defer></script>
 </body>
 </html>
