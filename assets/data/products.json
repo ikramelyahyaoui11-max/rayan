@@ -20,16 +20,6 @@
     "featured": false
   },
   {
-    "id": "ijl",
-    "name": "عجل صغير",
-    "tag": "بداية خير",
-    "price": 4200,
-    "desc": "بداية خير ورزق كبير، ذبح وتوزيع كامل مع توثيق بالاسم",
-    "image": "assets/products/ijl.png",
-    "defaultIntention": "أضحية",
-    "featured": false
-  },
-  {
     "id": "bakara",
     "name": "بقرة",
     "tag": "حصة كاملة",
