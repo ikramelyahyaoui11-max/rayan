@@ -25,12 +25,14 @@
           <strong>Contents: Read and write</strong> على مستودع <code>rayan</code> فقط.
           <br><strong>هذه الخطوة مرة واحدة فقط</strong> — سيتم حفظ الدخول تلقائيًا على هذا الجهاز والمتصفح.
         </p>
-        <div class="mb-3 text-start">
-          <label for="tokenInput" class="form-label small fw-bold">GitHub Token</label>
-          <input type="password" class="form-control" id="tokenInput" placeholder="ghp_xxxxxxxxxxxx">
-        </div>
-        <button type="button" class="btn btn-admin-primary w-100" id="loginBtn">دخول</button>
-        <p class="text-danger small mt-2 mb-0" id="loginError"></p>
+        <form id="loginForm" autocomplete="off">
+          <div class="mb-3 text-start">
+            <label for="tokenInput" class="form-label small fw-bold">GitHub Token</label>
+            <input type="text" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="form-control" id="tokenInput" name="rayan_gh_token" placeholder="ghp_xxxxxxxxxxxx">
+          </div>
+          <button type="submit" class="btn btn-admin-primary w-100" id="loginBtn">دخول</button>
+          <p class="text-danger small mt-2 mb-0" id="loginError"></p>
+        </form>
       </div>
     </div>
   </div>
@@ -183,7 +185,7 @@
     </div>
   </div>
 
-<script src="js/admin.js?v=20260806b"></script>
+<script src="js/admin.js?v=20260807a"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4" defer></script>
 </body>
 </html>

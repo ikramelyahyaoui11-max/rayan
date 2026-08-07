@@ -62,11 +62,29 @@ function showLogin(errorMsg) {
   loginError.textContent = errorMsg || '';
 }
 
-loginBtn.addEventListener('click', () => {
+function attemptLogin() {
   const token = tokenInput.value.trim();
-  if (!token) return;
+  if (!token) {
+    loginError.textContent = 'الرجاء لصق التوكن أولًا.';
+    return;
+  }
   localStorage.setItem(TOKEN_KEY, token);
   showDashboard();
+}
+
+// Multiple independent triggers (form submit covers Enter + button click;
+// a direct click listener is kept as a fallback in case something on the
+// user's browser interferes with one path but not the other).
+const loginForm = document.getElementById('loginForm');
+if (loginForm) {
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    attemptLogin();
+  });
+}
+loginBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  attemptLogin();
 });
 
 logoutBtn.addEventListener('click', () => {
