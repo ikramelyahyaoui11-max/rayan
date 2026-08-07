@@ -161,13 +161,27 @@
               <p class="text-muted mb-0">نظرة عامة على أداء الموقع</p>
               <button type="button" class="btn btn-outline-secondary btn-sm" id="statsRefreshBtn">🔄 تحديث</button>
             </div>
+
+            <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+              <button type="button" class="btn btn-sm btn-admin-primary stats-period-btn" data-days="7">أسبوع</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary stats-period-btn" data-days="30">شهر</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary stats-period-btn" data-days="90">3 أشهر</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary stats-period-btn" data-days="365">سنة</button>
+              <div class="d-flex align-items-center gap-2 flex-wrap ms-md-3">
+                <input type="date" class="form-control form-control-sm" id="statsCustomStart" style="width:auto;">
+                <span class="small text-muted">إلى</span>
+                <input type="date" class="form-control form-control-sm" id="statsCustomEnd" style="width:auto;">
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="statsCustomApply">تطبيق</button>
+              </div>
+            </div>
+
             <p class="mb-3" id="statsStatusMsg"></p>
 
             <div class="row row-cols-1 row-cols-md-3 g-3 mb-4" id="statsGrid"></div>
 
             <div class="card admin-card mb-4">
               <div class="card-body p-4">
-                <h6 class="fw-bold mb-3">مشاهدات الصفحات (آخر 14 يومًا)</h6>
+                <h6 class="fw-bold mb-3" id="statsChartTitle">مشاهدات الصفحات</h6>
                 <canvas id="statsChart" height="90"></canvas>
               </div>
             </div>
@@ -184,7 +198,7 @@
     </div>
   </div>
 
-<script src="js/admin.js?v=20260807d"></script>
+<script src="js/admin.js?v=20260807e"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4" defer></script>
 </body>
 </html>

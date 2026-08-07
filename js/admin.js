@@ -471,6 +471,46 @@ statsDisconnectBtn.addEventListener('click', () => {
 
 statsRefreshBtn.addEventListener('click', loadStats);
 
+// ===================== Date range selection =====================
+const statsChartTitle = document.getElementById('statsChartTitle');
+const statsCustomStart = document.getElementById('statsCustomStart');
+const statsCustomEnd = document.getElementById('statsCustomEnd');
+const statsCustomApply = document.getElementById('statsCustomApply');
+const statsPeriodBtns = document.querySelectorAll('.stats-period-btn');
+
+function toISODate(d) {
+  return d.toISOString().slice(0, 10);
+}
+
+let statsRangeStart = (() => { const d = new Date(); d.setDate(d.getDate() - 7); return d; })();
+let statsRangeEnd = new Date();
+let statsRangeLabel = 'أسبوع';
+
+statsPeriodBtns.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    statsPeriodBtns.forEach((b) => { b.classList.remove('btn-admin-primary'); b.classList.add('btn-outline-secondary'); });
+    btn.classList.remove('btn-outline-secondary');
+    btn.classList.add('btn-admin-primary');
+    const days = Number(btn.dataset.days);
+    statsRangeEnd = new Date();
+    statsRangeStart = new Date();
+    statsRangeStart.setDate(statsRangeStart.getDate() - days);
+    statsRangeLabel = btn.textContent.trim();
+    statsCustomStart.value = '';
+    statsCustomEnd.value = '';
+    loadStats();
+  });
+});
+
+statsCustomApply.addEventListener('click', () => {
+  if (!statsCustomStart.value || !statsCustomEnd.value) return;
+  statsPeriodBtns.forEach((b) => { b.classList.remove('btn-admin-primary'); b.classList.add('btn-outline-secondary'); });
+  statsRangeStart = new Date(statsCustomStart.value);
+  statsRangeEnd = new Date(statsCustomEnd.value);
+  statsRangeLabel = `${statsCustomStart.value} إلى ${statsCustomEnd.value}`;
+  loadStats();
+});
+
 async function goatFetch(site, key, path) {
   const res = await fetch(`https://${site}.goatcounter.com/api/v0/${path}`, {
     headers: { Authorization: `Bearer ${key}` },
@@ -502,11 +542,14 @@ async function loadStats() {
   statsStatusMsg.className = 'mb-3';
   statsGrid.innerHTML = '';
 
+  const startStr = toISODate(statsRangeStart);
+  const endStr = toISODate(statsRangeEnd);
+
   try {
-    const totalData = await goatFetch(site, key, 'stats/total?start=2020-01-01');
+    const totalData = await goatFetch(site, key, `stats/total?start=${startStr}&end=${endStr}`);
     let whatsappClicks = '—';
     try {
-      const hitsData = await goatFetch(site, key, 'stats/hits?limit=100&start=2020-01-01');
+      const hitsData = await goatFetch(site, key, `stats/hits?limit=100&start=${startStr}&end=${endStr}`);
       const match = hitsData?.hits?.find((h) => h.path === '/click-whatsapp-order');
       whatsappClicks = match ? (match.count ?? match.count_unique ?? 0) : 0;
     } catch (e) { /* keep placeholder, non-critical */ }
@@ -518,6 +561,7 @@ async function loadStats() {
     statsGrid.appendChild(statCard(typeof totalVisits === 'number' ? totalVisits.toLocaleString('en-US') : totalVisits, 'إجمالي الزيارات', 'border-success'));
     statsGrid.appendChild(statCard(typeof whatsappClicks === 'number' ? whatsappClicks.toLocaleString('en-US') : whatsappClicks, 'ضغطات "إرسال الطلب عبر واتساب"', 'border-info'));
 
+    statsChartTitle.textContent = `مشاهدات الصفحات (${statsRangeLabel})`;
     renderStatsChart(totalData.stats || []);
 
     statsStatusMsg.textContent = '';
@@ -534,9 +578,8 @@ function renderStatsChart(dailyStats) {
   const canvas = document.getElementById('statsChart');
   if (!canvas || typeof Chart === 'undefined') return;
 
-  const last14 = dailyStats.slice(-14);
-  const labels = last14.map((d) => d.day.slice(5));
-  const data = last14.map((d) => d.daily ?? 0);
+  const labels = dailyStats.map((d) => d.day.slice(5));
+  const data = dailyStats.map((d) => d.daily ?? 0);
 
   if (statsChartInstance) statsChartInstance.destroy();
   statsChartInstance = new Chart(canvas.getContext('2d'), {
