@@ -1557,6 +1557,37 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   box-shadow: 0 2px 8px rgba(245, 166, 35, 0.35);
 }
 
+.admin-stat-trend {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 1px 7px;
+  border-radius: 999px;
+  margin-inline-start: 4px;
+}
+.admin-stat-trend-up { background: rgba(27, 107, 58, 0.12); color: var(--green-dark); }
+.admin-stat-trend-down { background: rgba(192, 57, 43, 0.12); color: #c0392b; }
+
+.admin-topbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.admin-topbar-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
 /* ----- Sidebar layout ----- */
 .admin-layout { min-height: 100vh; }
 

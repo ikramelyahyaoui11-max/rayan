@@ -518,16 +518,27 @@ async function goatFetch(site, key, path) {
   return res.json();
 }
 
-function statCard(num, label, colorClass, icon) {
+function trendOf(current, previous) {
+  if (typeof current !== 'number' || typeof previous !== 'number' || previous === 0) return null;
+  const pct = Math.round(((current - previous) / previous) * 100);
+  return pct;
+}
+
+function statCard(num, label, colorClass, icon, trendPct) {
   const col = document.createElement('div');
   col.className = 'col';
+  let trendHtml = '';
+  if (trendPct !== null && trendPct !== undefined) {
+    const up = trendPct >= 0;
+    trendHtml = `<span class="admin-stat-trend ${up ? 'admin-stat-trend-up' : 'admin-stat-trend-down'}">${up ? '▲' : '▼'} ${Math.abs(trendPct)}%</span>`;
+  }
   col.innerHTML = `
     <div class="card admin-card admin-stat-card h-100">
       <div class="card-body d-flex align-items-center gap-3">
         <div class="admin-stat-icon ${colorClass}">${icon}</div>
         <div>
           <div class="admin-stat-num">${num}</div>
-          <div class="text-muted small mt-1">${label}</div>
+          <div class="text-muted small mt-1">${label} ${trendHtml}</div>
         </div>
       </div>
     </div>
@@ -547,6 +558,13 @@ async function loadStats() {
   const startStr = toISODate(statsRangeStart);
   const endStr = toISODate(statsRangeEnd);
 
+  // Same-length period immediately before the selected one, for trend comparison.
+  const periodMs = statsRangeEnd.getTime() - statsRangeStart.getTime();
+  const prevEnd = new Date(statsRangeStart.getTime() - 1);
+  const prevStart = new Date(prevEnd.getTime() - periodMs);
+  const prevStartStr = toISODate(prevStart);
+  const prevEndStr = toISODate(prevEnd);
+
   try {
     const totalData = await goatFetch(site, key, `stats/total?start=${startStr}&end=${endStr}`);
     let whatsappClicks = '—';
@@ -556,12 +574,20 @@ async function loadStats() {
       whatsappClicks = match ? (match.count ?? match.count_unique ?? 0) : 0;
     } catch (e) { /* keep placeholder, non-critical */ }
 
+    let prevViews = null;
+    let prevVisits = null;
+    try {
+      const prevData = await goatFetch(site, key, `stats/total?start=${prevStartStr}&end=${prevEndStr}`);
+      prevViews = prevData.total ?? null;
+      prevVisits = prevData.total_utc ?? prevData.total ?? null;
+    } catch (e) { /* trend is a nice-to-have, ignore failures */ }
+
     const totalViews = totalData.total ?? '—';
     const totalVisits = totalData.total_utc ?? totalData.total ?? '—';
 
-    statsGrid.appendChild(statCard(typeof totalViews === 'number' ? totalViews.toLocaleString('en-US') : totalViews, 'إجمالي مشاهدات الصفحات', 'admin-stat-icon-warning', '👁️'));
-    statsGrid.appendChild(statCard(typeof totalVisits === 'number' ? totalVisits.toLocaleString('en-US') : totalVisits, 'إجمالي الزيارات', 'admin-stat-icon-success', '👥'));
-    statsGrid.appendChild(statCard(typeof whatsappClicks === 'number' ? whatsappClicks.toLocaleString('en-US') : whatsappClicks, 'ضغطات "إرسال الطلب عبر واتساب"', 'admin-stat-icon-info', '💬'));
+    statsGrid.appendChild(statCard(typeof totalViews === 'number' ? totalViews.toLocaleString('en-US') : totalViews, 'إجمالي مشاهدات الصفحات', 'admin-stat-icon-warning', '👁️', trendOf(totalViews, prevViews)));
+    statsGrid.appendChild(statCard(typeof totalVisits === 'number' ? totalVisits.toLocaleString('en-US') : totalVisits, 'إجمالي الزيارات', 'admin-stat-icon-success', '👥', trendOf(totalVisits, prevVisits)));
+    statsGrid.appendChild(statCard(typeof whatsappClicks === 'number' ? whatsappClicks.toLocaleString('en-US') : whatsappClicks, 'ضغطات "إرسال الطلب عبر واتساب"', 'admin-stat-icon-info', '💬', null));
 
     statsChartTitle.textContent = `مشاهدات الصفحات (${statsRangeLabel})`;
     renderStatsChart(totalData.stats || []);
