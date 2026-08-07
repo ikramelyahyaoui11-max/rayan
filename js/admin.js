@@ -209,7 +209,7 @@ function renderProducts() {
         showStatus('جاري رفع الصورة...', false);
         const path = await uploadImage(file, product.id);
         product.image = path;
-        card.querySelector('.admin-product-image img').src = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${path}`;
+        card.querySelector('.admin-product-thumb').src = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${path}`;
         await persistProducts();
       } catch (err) {
         showStatus(`فشل رفع الصورة: ${err.message}`, true);
