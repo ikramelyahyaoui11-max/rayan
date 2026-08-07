@@ -488,9 +488,8 @@ let statsRangeLabel = 'أسبوع';
 
 statsPeriodBtns.forEach((btn) => {
   btn.addEventListener('click', () => {
-    statsPeriodBtns.forEach((b) => { b.classList.remove('btn-admin-primary'); b.classList.add('btn-outline-secondary'); });
-    btn.classList.remove('btn-outline-secondary');
-    btn.classList.add('btn-admin-primary');
+    statsPeriodBtns.forEach((b) => b.classList.remove('active'));
+    btn.classList.add('active');
     const days = Number(btn.dataset.days);
     statsRangeEnd = new Date();
     statsRangeStart = new Date();
@@ -504,7 +503,7 @@ statsPeriodBtns.forEach((btn) => {
 
 statsCustomApply.addEventListener('click', () => {
   if (!statsCustomStart.value || !statsCustomEnd.value) return;
-  statsPeriodBtns.forEach((b) => { b.classList.remove('btn-admin-primary'); b.classList.add('btn-outline-secondary'); });
+  statsPeriodBtns.forEach((b) => b.classList.remove('active'));
   statsRangeStart = new Date(statsCustomStart.value);
   statsRangeEnd = new Date(statsCustomEnd.value);
   statsRangeLabel = `${statsCustomStart.value} إلى ${statsCustomEnd.value}`;
@@ -519,14 +518,17 @@ async function goatFetch(site, key, path) {
   return res.json();
 }
 
-function statCard(num, label, colorClass) {
+function statCard(num, label, colorClass, icon) {
   const col = document.createElement('div');
   col.className = 'col';
   col.innerHTML = `
-    <div class="card admin-card admin-stat-card h-100 border-top border-4 ${colorClass}">
-      <div class="card-body text-center">
-        <div class="admin-stat-num">${num}</div>
-        <div class="text-muted small mt-1">${label}</div>
+    <div class="card admin-card admin-stat-card h-100">
+      <div class="card-body d-flex align-items-center gap-3">
+        <div class="admin-stat-icon ${colorClass}">${icon}</div>
+        <div>
+          <div class="admin-stat-num">${num}</div>
+          <div class="text-muted small mt-1">${label}</div>
+        </div>
       </div>
     </div>
   `;
@@ -557,9 +559,9 @@ async function loadStats() {
     const totalViews = totalData.total ?? '—';
     const totalVisits = totalData.total_utc ?? totalData.total ?? '—';
 
-    statsGrid.appendChild(statCard(typeof totalViews === 'number' ? totalViews.toLocaleString('en-US') : totalViews, 'إجمالي مشاهدات الصفحات', 'border-warning'));
-    statsGrid.appendChild(statCard(typeof totalVisits === 'number' ? totalVisits.toLocaleString('en-US') : totalVisits, 'إجمالي الزيارات', 'border-success'));
-    statsGrid.appendChild(statCard(typeof whatsappClicks === 'number' ? whatsappClicks.toLocaleString('en-US') : whatsappClicks, 'ضغطات "إرسال الطلب عبر واتساب"', 'border-info'));
+    statsGrid.appendChild(statCard(typeof totalViews === 'number' ? totalViews.toLocaleString('en-US') : totalViews, 'إجمالي مشاهدات الصفحات', 'admin-stat-icon-warning', '👁️'));
+    statsGrid.appendChild(statCard(typeof totalVisits === 'number' ? totalVisits.toLocaleString('en-US') : totalVisits, 'إجمالي الزيارات', 'admin-stat-icon-success', '👥'));
+    statsGrid.appendChild(statCard(typeof whatsappClicks === 'number' ? whatsappClicks.toLocaleString('en-US') : whatsappClicks, 'ضغطات "إرسال الطلب عبر واتساب"', 'admin-stat-icon-info', '💬'));
 
     statsChartTitle.textContent = `مشاهدات الصفحات (${statsRangeLabel})`;
     renderStatsChart(totalData.stats || []);
