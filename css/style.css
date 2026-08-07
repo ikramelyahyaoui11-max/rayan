@@ -1474,6 +1474,11 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
 /* ===================== Admin panel (Bootstrap-based) ===================== */
 .admin-body { background: #f4f6f8; }
 
+/* Plain (non-!important) flex display, toggled via JS inline style for
+   show/hide. Bootstrap's own .d-flex uses !important and would silently
+   defeat element.style.display = 'none' set from admin.js. */
+.admin-login-flex { display: flex; }
+
 .admin-card {
   border-radius: var(--radius-md) !important;
   box-shadow: var(--shadow-sm);
