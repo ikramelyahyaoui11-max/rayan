@@ -1104,13 +1104,7 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   background: var(--cream);
   display: block;
 }
-.product-detail-image .product-tag {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: var(--white);
-  box-shadow: var(--shadow-sm);
-}
+.product-detail-info .product-tag { margin-bottom: 10px; }
 .product-detail-info { text-align: right; }
 .product-detail-info h1 {
   font-size: 30px;
