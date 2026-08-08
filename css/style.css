@@ -1092,8 +1092,10 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-lg);
-  min-height: 380px;
-  max-height: 560px;
+  aspect-ratio: 1 / 1;
+  max-width: 420px;
+  max-height: 420px;
+  margin-inline-start: auto;
 }
 .product-detail-image img {
   width: 100%;
