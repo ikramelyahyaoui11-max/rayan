@@ -1486,6 +1486,9 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
 }
 .admin-card.border-dashed { border: 1.5px dashed var(--border) !important; }
 
+.admin-stat-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.admin-stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+
 .btn-admin-primary {
   background: var(--orange);
   border-color: var(--orange);
@@ -1527,8 +1530,13 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 22px 24px;
+  padding: 24px 26px;
   box-shadow: var(--shadow-sm);
+}
+.stats-toolbar-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 20px 0;
 }
 
 .stats-segmented {

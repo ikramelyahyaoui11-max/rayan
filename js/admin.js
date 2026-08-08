@@ -580,10 +580,16 @@ function statCard(num, label, colorClass, icon, trendPct) {
   return col;
 }
 
+let statsRequestId = 0;
+
 async function loadStats() {
   const site = localStorage.getItem(STATS_SITE_KEY);
   const key = localStorage.getItem(STATS_APIKEY_KEY);
   if (!site || !key) return;
+
+  // Guards against overlapping calls (e.g. clicking period buttons quickly):
+  // only the most recently started request is allowed to render its results.
+  const requestId = ++statsRequestId;
 
   statsStatusMsg.textContent = 'جاري التحميل...';
   statsStatusMsg.className = 'mb-3';
@@ -614,10 +620,13 @@ async function loadStats() {
       prevViews = prevData.total ?? null;
     } catch (e) { /* trend is a nice-to-have, ignore failures */ }
 
+    if (requestId !== statsRequestId) return; // a newer request has since started
+
     const totalViews = totalData.total ?? '—';
     const dayCount = (totalData.stats || []).length || 1;
     const dailyAvg = typeof totalViews === 'number' ? Math.round(totalViews / dayCount) : '—';
 
+    statsGrid.innerHTML = '';
     statsGrid.appendChild(statCard(typeof totalViews === 'number' ? totalViews.toLocaleString('en-US') : totalViews, 'إجمالي مشاهدات الصفحات', 'admin-stat-icon-warning', '👁️', trendOf(totalViews, prevViews)));
     statsGrid.appendChild(statCard(typeof dailyAvg === 'number' ? dailyAvg.toLocaleString('en-US') : dailyAvg, 'متوسط المشاهدات اليومية', 'admin-stat-icon-success', '📈', null));
     statsGrid.appendChild(statCard(typeof whatsappClicks === 'number' ? whatsappClicks.toLocaleString('en-US') : whatsappClicks, 'ضغطات "إرسال الطلب عبر واتساب"', 'admin-stat-icon-info', '💬', null));
@@ -628,6 +637,7 @@ async function loadStats() {
     statsStatusMsg.textContent = '';
     statsStatusMsg.className = 'mb-3';
   } catch (err) {
+    if (requestId !== statsRequestId) return;
     statsStatusMsg.textContent = `تعذر تحميل الإحصائيات: ${err.message}. تأكدي من صحة اسم الموقع و API Key، أو استخدمي الرابط أدناه لعرض اللوحة الكاملة.`;
     statsStatusMsg.className = 'alert alert-danger py-2 px-3 small mb-3';
   }
