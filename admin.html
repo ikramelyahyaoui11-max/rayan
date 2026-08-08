@@ -49,15 +49,24 @@
       </div>
 
       <nav class="nav nav-pills flex-column gap-1 flex-grow-1 mt-2">
-        <button type="button" class="nav-link admin-nav-link active text-start" id="menuProductsBtn">
+        <button type="button" class="nav-link admin-nav-link active text-start" id="menuHomeBtn">
+          🏠 الرئيسية
+        </button>
+        <button type="button" class="nav-link admin-nav-link text-start" id="menuProductsBtn">
           📦 المنتجات
         </button>
         <button type="button" class="nav-link admin-nav-link text-start" id="menuStatsBtn">
           📊 الإحصائيات
         </button>
+        <button type="button" class="nav-link admin-nav-link text-start" id="menuSettingsBtn">
+          ⚙️ الإعدادات
+        </button>
       </nav>
 
       <div class="d-flex flex-column gap-1 pt-2 border-top border-white border-opacity-10">
+        <button type="button" class="nav-link admin-nav-link admin-nav-link-secondary text-start" id="darkModeToggle">
+          🌙 <span>الوضع الداكن</span>
+        </button>
         <a href="index.html" class="nav-link admin-nav-link admin-nav-link-secondary text-start">
           🌐 عرض الموقع
         </a>
@@ -81,15 +90,73 @@
 
       <main class="p-4 flex-grow-1">
 
+        <!-- ===== Home tab ===== -->
+        <div id="homeTab">
+          <div class="stats-toolbar-card mb-4">
+            <h5 class="fw-bold mb-1">مرحبًا بك في لوحة تحكم مؤسسة الريان 👋</h5>
+            <p class="text-muted small mb-0">نظرة سريعة على حالة الموقع.</p>
+          </div>
+
+          <div class="row row-cols-1 row-cols-md-3 g-3 mb-4" id="homeGrid"></div>
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="card admin-card h-100">
+                <div class="card-body p-4">
+                  <h6 class="fw-bold mb-3">روابط سريعة</h6>
+                  <div class="d-flex flex-column gap-2">
+                    <button type="button" class="btn btn-outline-secondary text-start home-quick-link" data-target="products">📦 إدارة المنتجات</button>
+                    <button type="button" class="btn btn-outline-secondary text-start home-quick-link" data-target="stats">📊 عرض الإحصائيات</button>
+                    <button type="button" class="btn btn-outline-secondary text-start home-quick-link" data-target="settings">⚙️ إعدادات الموقع</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card admin-card h-100">
+                <div class="card-body p-4">
+                  <h6 class="fw-bold mb-3">عن هذه اللوحة</h6>
+                  <p class="text-muted small mb-0">
+                    كل التغييرات (منتجات، إعدادات) تُحفظ مباشرة على الموقع المباشر خلال دقيقة تقريبًا.
+                    استخدمي "الإحصائيات" لمتابعة الزوار، و"الإعدادات" لتعديل رقم واتساب ونصوص الصفحة الرئيسية.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- ===== Products tab ===== -->
-        <div id="productsTab">
+        <div id="productsTab" style="display:none;">
           <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
             <p class="text-muted mb-0">أضيفي، عدّلي، أو احذفي منتجات الموقع مباشرة</p>
-            <button type="button" class="btn btn-admin-primary fw-bold" id="saveAllBtn">💾 حفظ كل التغييرات على الموقع</button>
+            <div class="d-flex gap-2">
+              <div class="stats-segmented">
+                <button type="button" class="stats-segmented-btn active" id="productsViewCards">📇 بطاقات</button>
+                <button type="button" class="stats-segmented-btn" id="productsViewTable">📋 جدول</button>
+              </div>
+              <button type="button" class="btn btn-admin-primary fw-bold" id="saveAllBtn">💾 حفظ كل التغييرات على الموقع</button>
+            </div>
           </div>
           <p class="mb-3" id="statusMsg"></p>
 
-          <div class="d-flex flex-column gap-3 mb-4" id="productsList"></div>
+          <div class="admin-products-flex flex-column gap-3 mb-4" id="productsList"></div>
+
+          <div class="table-responsive mb-4" id="productsTableWrap" style="display:none;">
+            <table class="table admin-card align-middle">
+              <thead>
+                <tr>
+                  <th>صورة</th>
+                  <th>الاسم</th>
+                  <th>السعر</th>
+                  <th>الوسم</th>
+                  <th>مميز</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="productsTableBody"></tbody>
+            </table>
+          </div>
 
           <div class="card admin-card border-dashed">
             <div class="card-body p-4">
@@ -209,11 +276,41 @@
           </div>
         </div>
 
+        <!-- ===== Settings tab ===== -->
+        <div id="settingsTab" style="display:none;">
+          <div class="card admin-card" style="max-width:640px;">
+            <div class="card-body p-4 text-start">
+              <h5 class="fw-bold mb-3">⚙️ إعدادات الموقع</h5>
+              <p class="text-muted small">هذه القيم تُستخدم في الصفحة الرئيسية وصفحة الحجز مباشرة.</p>
+
+              <div class="mb-3">
+                <label class="form-label small fw-bold">رقم واتساب (بدون + أو مسافات، مثال: 201008659399)</label>
+                <input type="text" class="form-control" id="settingWhatsapp" placeholder="201008659399">
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold">رقم الهاتف الظاهر للاتصال</label>
+                <input type="text" class="form-control" id="settingPhone" placeholder="+201008659399">
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold">عنوان الصفحة الرئيسية</label>
+                <input type="text" class="form-control" id="settingHeroTitle" placeholder="احجزوا أضحيتكم بثقة...">
+              </div>
+              <div class="mb-3">
+                <label class="form-label small fw-bold">النص التعريفي أسفل العنوان</label>
+                <textarea class="form-control" id="settingHeroDesc" rows="3" placeholder="نتولى شراء الذبيحة..."></textarea>
+              </div>
+
+              <button type="button" class="btn btn-admin-primary" id="saveSettingsBtn">💾 حفظ الإعدادات</button>
+              <p class="mt-2 mb-0" id="settingsStatusMsg"></p>
+            </div>
+          </div>
+        </div>
+
       </main>
     </div>
   </div>
 
-<script src="js/admin.js?v=20260807h"></script>
+<script src="js/admin.js?v=20260807i"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4" defer></script>
 </body>
 </html>

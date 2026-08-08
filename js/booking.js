@@ -133,7 +133,8 @@ bookingForm.addEventListener('submit', (e) => {
     window.goatcounter.count({ path: 'click-whatsapp-order', title: 'WhatsApp order click', event: true });
   }
 
-  const url = `https://wa.me/201008659399?text=${encodeURIComponent(message)}`;
+  const waNumber = (window.RayanSettings && window.RayanSettings.data && window.RayanSettings.data.whatsapp) || '201008659399';
+  const url = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank', 'noopener');
 
   if (checkoutCart) localStorage.removeItem('rayan_cart');

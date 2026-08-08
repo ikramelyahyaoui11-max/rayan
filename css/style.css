@@ -1478,6 +1478,8 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
    show/hide. Bootstrap's own .d-flex uses !important and would silently
    defeat element.style.display = 'none' set from admin.js. */
 .admin-login-flex { display: flex; }
+.admin-products-flex { display: flex; }
+.admin-table-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; }
 
 .admin-card {
   border-radius: var(--radius-md) !important;
@@ -1632,3 +1634,36 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
     flex-direction: row !important;
   }
 }
+
+/* ----- Dark mode ----- */
+body.admin-dark { background: #10151c; }
+body.admin-dark .admin-topbar { background: #161d27 !important; border-color: #232b38 !important; }
+body.admin-dark .admin-topbar h1,
+body.admin-dark .admin-topbar p { color: #e8ecf1; }
+body.admin-dark .admin-card,
+body.admin-dark .stats-toolbar-card,
+body.admin-dark table.admin-card {
+  background: #161d27;
+  border-color: #232b38 !important;
+  color: #e8ecf1;
+}
+body.admin-dark .admin-card h5,
+body.admin-dark .admin-card h6,
+body.admin-dark .stats-toolbar-card h5,
+body.admin-dark .admin-stat-num { color: #f2f5f8; }
+body.admin-dark .text-muted { color: #8892a0 !important; }
+body.admin-dark .form-control,
+body.admin-dark .form-select {
+  background: #10151c;
+  border-color: #2a3342;
+  color: #e8ecf1;
+}
+body.admin-dark .form-control:focus,
+body.admin-dark .form-select:focus { background: #10151c; color: #e8ecf1; }
+body.admin-dark .form-label { color: #c3cad4; }
+body.admin-dark .stats-segmented { background: #10151c; }
+body.admin-dark .stats-segmented-btn { color: #8892a0; }
+body.admin-dark .table { color: #e8ecf1; }
+body.admin-dark .table > :not(caption) > * > * { background: transparent; color: #e8ecf1; border-color: #232b38; }
+body.admin-dark .btn-outline-secondary { color: #c3cad4; border-color: #2a3342; }
+body.admin-dark .btn-outline-secondary:hover { background: #232b38; color: #fff; }

@@ -69,6 +69,7 @@ function showStatus(message, isError) {
 function showDashboard() {
   loginSection.style.display = 'none';
   dashboardSection.style.display = 'flex';
+  showTab('home');
   loadProducts();
 }
 
@@ -126,6 +127,7 @@ async function loadProducts() {
     productsSha = data.sha;
     products = JSON.parse(base64ToUtf8(data.content));
     renderProducts();
+    if (document.getElementById('homeTab').style.display !== 'none') renderHomeTab();
     showStatus('', false);
   } catch (err) {
     showStatus(`حدث خطأ أثناء التحميل: ${err.message}`, true);
@@ -218,6 +220,7 @@ function renderProducts() {
 
     productsList.appendChild(card);
   });
+  renderProductsTable();
 }
 
 // ===================== Upload image =====================
@@ -393,28 +396,59 @@ async function persistProducts() {
 saveAllBtn.addEventListener('click', persistProducts);
 
 // ===================== Menu tabs =====================
-const menuProductsBtn = document.getElementById('menuProductsBtn');
-const menuStatsBtn = document.getElementById('menuStatsBtn');
-const productsTab = document.getElementById('productsTab');
-const statsTab = document.getElementById('statsTab');
 const pageTitle = document.getElementById('pageTitle');
 
-menuProductsBtn.addEventListener('click', () => {
-  menuProductsBtn.classList.add('active');
-  menuStatsBtn.classList.remove('active');
-  productsTab.style.display = 'block';
-  statsTab.style.display = 'none';
-  pageTitle.textContent = 'إدارة المنتجات';
+const TABS = {
+  home: { btn: 'menuHomeBtn', tab: 'homeTab', title: 'الرئيسية', onShow: renderHomeTab },
+  products: { btn: 'menuProductsBtn', tab: 'productsTab', title: 'إدارة المنتجات' },
+  stats: { btn: 'menuStatsBtn', tab: 'statsTab', title: 'الإحصائيات', onShow: initStatsTab },
+  settings: { btn: 'menuSettingsBtn', tab: 'settingsTab', title: 'الإعدادات', onShow: initSettingsTab },
+};
+
+function showTab(name) {
+  Object.entries(TABS).forEach(([key, cfg]) => {
+    const btn = document.getElementById(cfg.btn);
+    const tab = document.getElementById(cfg.tab);
+    const active = key === name;
+    btn.classList.toggle('active', active);
+    tab.style.display = active ? 'block' : 'none';
+  });
+  pageTitle.textContent = TABS[name].title;
+  if (TABS[name].onShow) TABS[name].onShow();
+}
+
+Object.entries(TABS).forEach(([key, cfg]) => {
+  document.getElementById(cfg.btn).addEventListener('click', () => showTab(key));
 });
 
-menuStatsBtn.addEventListener('click', () => {
-  menuStatsBtn.classList.add('active');
-  menuProductsBtn.classList.remove('active');
-  productsTab.style.display = 'none';
-  statsTab.style.display = 'block';
-  pageTitle.textContent = 'الإحصائيات';
-  initStatsTab();
+document.querySelectorAll('.home-quick-link').forEach((btn) => {
+  btn.addEventListener('click', () => showTab(btn.dataset.target));
 });
+
+function renderHomeTab() {
+  const homeGrid = document.getElementById('homeGrid');
+  homeGrid.innerHTML = '';
+  homeGrid.appendChild(statCard(products.length, 'عدد المنتجات', 'admin-stat-icon-success', '📦', null));
+
+  const site = localStorage.getItem(STATS_SITE_KEY);
+  const key = localStorage.getItem(STATS_APIKEY_KEY);
+  if (site && key) {
+    homeGrid.appendChild(statCard('...', 'زوار اليوم', 'admin-stat-icon-warning', '👁️', null));
+    const today = new Date();
+    const start = toISODate(today);
+    goatFetch(site, key, `stats/total?start=${start}&end=${start}`)
+      .then((data) => {
+        const el = homeGrid.children[1]?.querySelector('.admin-stat-num');
+        if (el) el.textContent = (data.total ?? 0).toLocaleString('en-US');
+      })
+      .catch(() => {
+        const el = homeGrid.children[1]?.querySelector('.admin-stat-num');
+        if (el) el.textContent = '—';
+      });
+  } else {
+    homeGrid.appendChild(statCard('—', 'الإحصائيات غير متصلة', 'admin-stat-icon-info', '📊', null));
+  }
+}
 
 // ===================== Statistics (GoatCounter) =====================
 const STATS_SITE_KEY = 'rayan_stats_site';
@@ -632,6 +666,139 @@ function renderStatsChart(dailyStats) {
     },
   });
 }
+
+// ===================== Dark mode =====================
+const DARK_MODE_KEY = 'rayan_admin_dark';
+const darkModeToggle = document.getElementById('darkModeToggle');
+
+function applyDarkMode(on) {
+  document.body.classList.toggle('admin-dark', on);
+}
+
+darkModeToggle.addEventListener('click', () => {
+  const on = !document.body.classList.contains('admin-dark');
+  applyDarkMode(on);
+  localStorage.setItem(DARK_MODE_KEY, on ? 'yes' : 'no');
+});
+
+applyDarkMode(localStorage.getItem(DARK_MODE_KEY) === 'yes');
+
+// ===================== Products: table view =====================
+const productsTableWrap = document.getElementById('productsTableWrap');
+const productsTableBody = document.getElementById('productsTableBody');
+const productsViewCards = document.getElementById('productsViewCards');
+const productsViewTable = document.getElementById('productsViewTable');
+
+productsViewCards.addEventListener('click', () => {
+  productsViewCards.classList.add('active');
+  productsViewTable.classList.remove('active');
+  productsList.style.display = 'flex';
+  productsTableWrap.style.display = 'none';
+});
+
+productsViewTable.addEventListener('click', () => {
+  productsViewTable.classList.add('active');
+  productsViewCards.classList.remove('active');
+  productsList.style.display = 'none';
+  productsTableWrap.style.display = 'block';
+});
+
+function renderProductsTable() {
+  productsTableBody.innerHTML = '';
+  products.forEach((product, index) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td><img src="${product.image}" alt="${product.name}" class="admin-table-thumb"></td>
+      <td><input type="text" class="form-control form-control-sm t-name" value="${product.name}"></td>
+      <td><input type="number" class="form-control form-control-sm t-price" value="${product.price}" style="width:100px;"></td>
+      <td><input type="text" class="form-control form-control-sm t-tag" value="${product.tag}"></td>
+      <td class="text-center"><input type="checkbox" class="form-check-input t-featured"></td>
+      <td><button type="button" class="btn btn-outline-danger btn-sm t-delete">🗑️</button></td>
+    `;
+    row.querySelector('.t-featured').checked = Boolean(product.featured);
+
+    row.querySelector('.t-name').addEventListener('change', (e) => { product.name = e.target.value; scheduleSave(); });
+    row.querySelector('.t-price').addEventListener('change', (e) => { product.price = Number(e.target.value); scheduleSave(); });
+    row.querySelector('.t-tag').addEventListener('change', (e) => { product.tag = e.target.value; scheduleSave(); });
+    row.querySelector('.t-featured').addEventListener('change', (e) => { product.featured = e.target.checked; scheduleSave(); });
+    row.querySelector('.t-delete').addEventListener('click', () => {
+      if (!confirm(`هل تريد حذف "${product.name}"؟`)) return;
+      products.splice(index, 1);
+      renderProducts();
+      persistProducts();
+    });
+
+    productsTableBody.appendChild(row);
+  });
+}
+
+// ===================== Settings tab =====================
+const SETTINGS_PATH = 'assets/data/settings.json';
+let settingsSha = null;
+let settingsLoaded = false;
+
+const settingWhatsapp = document.getElementById('settingWhatsapp');
+const settingPhone = document.getElementById('settingPhone');
+const settingHeroTitle = document.getElementById('settingHeroTitle');
+const settingHeroDesc = document.getElementById('settingHeroDesc');
+const saveSettingsBtn = document.getElementById('saveSettingsBtn');
+const settingsStatusMsg = document.getElementById('settingsStatusMsg');
+
+function showSettingsStatus(message, isError) {
+  settingsStatusMsg.textContent = message;
+  settingsStatusMsg.className = message ? `alert ${isError ? 'alert-danger' : 'alert-success'} py-2 px-3 small mb-0 mt-2` : 'mb-0 mt-2';
+}
+
+async function initSettingsTab() {
+  if (settingsLoaded) return;
+  try {
+    const res = await fetch(apiUrl(SETTINGS_PATH), { headers: ghHeaders() });
+    if (res.ok) {
+      const data = await res.json();
+      settingsSha = data.sha;
+      const settings = JSON.parse(base64ToUtf8(data.content));
+      settingWhatsapp.value = settings.whatsapp || '';
+      settingPhone.value = settings.phone || '';
+      settingHeroTitle.value = settings.heroTitle || '';
+      settingHeroDesc.value = settings.heroDesc || '';
+      settingsLoaded = true;
+    }
+  } catch (err) { /* file may not exist yet - form stays empty, sha stays null */ }
+}
+
+saveSettingsBtn.addEventListener('click', async () => {
+  const settings = {
+    whatsapp: settingWhatsapp.value.trim(),
+    phone: settingPhone.value.trim(),
+    heroTitle: settingHeroTitle.value.trim(),
+    heroDesc: settingHeroDesc.value.trim(),
+  };
+  saveSettingsBtn.disabled = true;
+  showSettingsStatus('⏳ جاري الحفظ...', false);
+  try {
+    const res = await fetch(apiUrl(SETTINGS_PATH), {
+      method: 'PUT',
+      headers: ghHeaders(),
+      body: JSON.stringify({
+        message: 'Update site settings via admin panel',
+        content: utf8ToBase64(JSON.stringify(settings, null, 2)),
+        sha: settingsSha || undefined,
+        branch: 'main',
+      }),
+    });
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.message || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    settingsSha = data.content.sha;
+    showSettingsStatus('✅ تم الحفظ بنجاح! التغييرات ستظهر على الموقع خلال دقيقة تقريبًا.', false);
+  } catch (err) {
+    showSettingsStatus(`فشل الحفظ: ${err.message}`, true);
+  } finally {
+    saveSettingsBtn.disabled = false;
+  }
+});
 
 // ===================== Init =====================
 // Support a one-time "magic link" (admin.html?pw=...) that logs in
