@@ -2,7 +2,7 @@
   {
     "id": "kharouf",
     "name": "خروف",
-    "tag": "الأكثر طلبًا",
+    "tag": "TEST-REVERT-CHECK",
     "price": 2800,
     "desc": "ذبح، سلخ، توزيع كامل على المحتاجين، وتوثيق بالاسم",
     "image": "assets/products/kharouf.png",
