@@ -433,7 +433,7 @@ function renderHomeTab() {
   const site = localStorage.getItem(STATS_SITE_KEY);
   const key = localStorage.getItem(STATS_APIKEY_KEY);
   if (site && key) {
-    homeGrid.appendChild(statCard('...', 'زوار اليوم', 'admin-stat-icon-warning', '👁️', null));
+    homeGrid.appendChild(statCard('...', 'مشاهدات اليوم', 'admin-stat-icon-warning', '👁️', null));
     const today = new Date();
     const start = toISODate(today);
     goatFetch(site, key, `stats/total?start=${start}&end=${start}`)
@@ -609,18 +609,17 @@ async function loadStats() {
     } catch (e) { /* keep placeholder, non-critical */ }
 
     let prevViews = null;
-    let prevVisits = null;
     try {
       const prevData = await goatFetch(site, key, `stats/total?start=${prevStartStr}&end=${prevEndStr}`);
       prevViews = prevData.total ?? null;
-      prevVisits = prevData.total_utc ?? prevData.total ?? null;
     } catch (e) { /* trend is a nice-to-have, ignore failures */ }
 
     const totalViews = totalData.total ?? '—';
-    const totalVisits = totalData.total_utc ?? totalData.total ?? '—';
+    const dayCount = (totalData.stats || []).length || 1;
+    const dailyAvg = typeof totalViews === 'number' ? Math.round(totalViews / dayCount) : '—';
 
     statsGrid.appendChild(statCard(typeof totalViews === 'number' ? totalViews.toLocaleString('en-US') : totalViews, 'إجمالي مشاهدات الصفحات', 'admin-stat-icon-warning', '👁️', trendOf(totalViews, prevViews)));
-    statsGrid.appendChild(statCard(typeof totalVisits === 'number' ? totalVisits.toLocaleString('en-US') : totalVisits, 'إجمالي الزيارات', 'admin-stat-icon-success', '👥', trendOf(totalVisits, prevVisits)));
+    statsGrid.appendChild(statCard(typeof dailyAvg === 'number' ? dailyAvg.toLocaleString('en-US') : dailyAvg, 'متوسط المشاهدات اليومية', 'admin-stat-icon-success', '📈', null));
     statsGrid.appendChild(statCard(typeof whatsappClicks === 'number' ? whatsappClicks.toLocaleString('en-US') : whatsappClicks, 'ضغطات "إرسال الطلب عبر واتساب"', 'admin-stat-icon-info', '💬', null));
 
     statsChartTitle.textContent = `مشاهدات الصفحات (${statsRangeLabel})`;
