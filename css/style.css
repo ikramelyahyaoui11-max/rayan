@@ -1479,6 +1479,8 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   .main-nav { display: none; }
   .nav-toggle { display: flex; }
   .hide-sm { display: none; }
+  .header-actions { gap: 6px; }
+  .currency-pill { padding: 5px 8px; font-size: 11px; }
   .hero-inner { grid-template-columns: 1fr; text-align: center; }
   .hero-copy > p { margin-inline: auto; }
   .hero-cta { justify-content: center; }

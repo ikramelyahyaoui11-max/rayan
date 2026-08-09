@@ -5,7 +5,7 @@ window.RayanCurrency = (function () {
   const KEY = 'rayan_currency';
   const RATES = { EGP: 1, USD: 1 / 49, SAR: 1 / 13.05 };
   const SYMBOLS = { EGP: 'ج.م', USD: '$', SAR: 'ر.س' };
-  const LABELS = { EGP: 'ج.م', USD: 'USD $', SAR: 'SAR ر.س' };
+  const LABELS = { EGP: 'ج.م', USD: '$', SAR: 'ر.س' };
 
   function getCurrency() {
     return localStorage.getItem(KEY) || 'EGP';
