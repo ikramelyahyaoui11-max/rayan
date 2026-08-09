@@ -61,7 +61,10 @@ Promise.all([
   fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' }).then((res) => res.json()),
   fetch(`assets/data/services.json?v=${Date.now()}`, { cache: 'no-store' }).then((res) => res.json()),
 ]).then(([products, services]) => {
-    const PRODUCTS = [...products, ...services];
+    const PRODUCTS = [
+      ...products,
+      ...services.map((s) => ({ ...s, _isService: true })),
+    ];
     const params = new URLSearchParams(window.location.search);
     const product = PRODUCTS.find((p) => p.id === params.get('id')) || PRODUCTS[0];
 
@@ -87,6 +90,18 @@ Promise.all([
     productPriceEl.dataset.split = 'true';
     productPriceEl.innerHTML = `${product.price.toLocaleString('en-US')} <span>ج.م</span>`;
     document.getElementById('productIntention').value = product.defaultIntention;
+
+    if (product._isService) {
+      document.getElementById('productAddonsRow').style.display = 'none';
+      document.getElementById('productAddons').required = false;
+      document.getElementById('productIntentionRow').style.display = 'none';
+      document.getElementById('productIntention').required = false;
+      const deliveryText = 'أوكّل مؤسسة الريان بتنفيذ هذا المشروع وتزويدي بتقرير موثق بالصور والفيديوهات';
+      const productDeliveryEl2 = document.getElementById('productDelivery');
+      productDeliveryEl2.textContent = deliveryText;
+      productDeliveryEl2.dataset.value = deliveryText;
+      document.getElementById('productSubmitBtn').innerHTML = '🤲 أضف للسلة';
+    }
 
     // ---- Quantity stepper ----
     let qty = 1;

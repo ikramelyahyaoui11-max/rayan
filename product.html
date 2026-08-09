@@ -71,7 +71,7 @@
           <div class="product-price" id="productPrice"></div>
 
           <form class="product-form" id="productForm">
-            <div class="form-row">
+            <div class="form-row" id="productAddonsRow">
               <label for="productAddons">إضافات على الطلب</label>
               <select id="productAddons" required>
                 <option value="بدون إضافات">بدون إضافات</option>
@@ -79,7 +79,7 @@
                 <option value="مع (10 كيلو) أرز">مع (10 كيلو) أرز</option>
               </select>
             </div>
-            <div class="form-row">
+            <div class="form-row" id="productIntentionRow">
               <label for="productIntention">النية</label>
               <select id="productIntention" required>
                 <option value="أضحية">أضحية</option>
@@ -105,7 +105,7 @@
                 <span class="qty-value" id="qtyValue">1</span>
                 <button type="button" class="qty-btn" id="qtyPlus" aria-label="زيادة الكمية">+</button>
               </div>
-              <button type="submit" class="btn btn-primary btn-lg btn-block">🛒 أضف للسلة</button>
+              <button type="submit" class="btn btn-primary btn-lg btn-block" id="productSubmitBtn">🛒 أضف للسلة</button>
             </div>
           </form>
         </div>
