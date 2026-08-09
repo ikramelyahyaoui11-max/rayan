@@ -86,10 +86,25 @@ Promise.all([
     document.getElementById('productDesc').textContent = product.desc;
     const productPriceEl = document.getElementById('productPrice');
     productPriceEl.classList.add('currency-price');
-    productPriceEl.dataset.egp = product.price;
     productPriceEl.dataset.split = 'true';
-    productPriceEl.innerHTML = `${product.price.toLocaleString('en-US')} <span>ج.م</span>`;
     document.getElementById('productIntention').value = product.defaultIntention;
+
+    // ---- Rice addon pricing (70 ج.م per kilo, added on top of the base price) ----
+    const RICE_PRICE_PER_KG = 70;
+    function addonCost(addonValue) {
+      const match = addonValue.match(/(\d+)\s*كيلو/);
+      return match ? Number(match[1]) * RICE_PRICE_PER_KG : 0;
+    }
+    function currentTotalPrice() {
+      return product.price + addonCost(document.getElementById('productAddons').value);
+    }
+    function updatePriceDisplay() {
+      const total = currentTotalPrice();
+      productPriceEl.dataset.egp = total;
+      document.dispatchEvent(new CustomEvent('rayan-content-updated'));
+    }
+    updatePriceDisplay();
+    document.getElementById('productAddons').addEventListener('change', updatePriceDisplay);
 
     if (product._isService) {
       document.getElementById('productAddonsRow').style.display = 'none';
@@ -123,7 +138,7 @@ Promise.all([
 
     document.getElementById('productForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      window.RayanCart.add(product.name, product.price, qty, {
+      window.RayanCart.add(product.name, currentTotalPrice(), qty, {
         note: productNoteEl.value.trim(),
         intention: productIntentionEl.value,
         addons: productAddonsEl.value,
