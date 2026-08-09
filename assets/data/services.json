@@ -29,7 +29,8 @@
     "desc": "لوح طاقة شمسية وبطارية ولمبات وسلك، نوصّلها لبيت ليس فيه إنارة.",
     "icon": "☀️",
     "defaultIntention": "صدقة",
-    "featured": false
+    "featured": false,
+    "image": "assets/services/solar-light-1786308915794.png"
   },
   {
     "id": "pregnant-ewe",
