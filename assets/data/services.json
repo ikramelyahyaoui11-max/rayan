@@ -50,7 +50,8 @@
     "desc": "مشروع صغير (كشك أكل أو ماكينة خياطة) يساعد أسرة على الاعتماد على نفسها وتوفير مصدر رزق.",
     "icon": "🏪",
     "defaultIntention": "صدقة",
-    "featured": false
+    "featured": false,
+    "image": "assets/services/kiosk-or-sewing-1786309206115.png"
   },
   {
     "id": "well-tanzania-manual",
