@@ -837,6 +837,14 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   object-fit: contain;
   display: block;
 }
+.product-card-icon {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--green-light), var(--cream));
+}
+.product-card-icon span { font-size: 64px; line-height: 1; }
 .product-card.featured { border-color: transparent; box-shadow: 0 0 0 2px var(--orange), var(--shadow-lg); }
 .product-card.featured:hover { box-shadow: 0 0 0 2px var(--orange), var(--shadow-lg); }
 .product-tag {

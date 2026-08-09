@@ -287,6 +287,52 @@ fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' })
     document.dispatchEvent(new CustomEvent('rayan-content-updated'));
   });
 
+// ===================== Other charity services (loaded from assets/data/services.json) =====================
+fetch(`assets/data/services.json?v=${Date.now()}`, { cache: 'no-store' })
+  .then((res) => res.json())
+  .then((services) => {
+    const servicesGrid = document.getElementById('servicesExtraGrid');
+    if (!servicesGrid) return;
+
+    services.forEach((service) => {
+      const card = document.createElement('div');
+      card.className = service.featured ? 'card product-card featured' : 'card product-card';
+      card.dataset.product = service.name;
+      card.dataset.price = service.price;
+      card.innerHTML = `
+        <div class="product-card-image product-card-icon"><span>${service.icon}</span></div>
+        <span class="product-tag">${service.tag}</span>
+        <h3>${service.name}</h3>
+        <p class="product-desc">${service.desc}</p>
+        <div class="product-price currency-price" data-egp="${service.price}" data-split="true">${service.price.toLocaleString('en-US')} <span>ج.م</span></div>
+        <div class="product-actions">
+          <div class="qty-stepper">
+            <button type="button" class="qty-btn qty-minus" aria-label="إنقاص الكمية">−</button>
+            <span class="qty-value">1</span>
+            <button type="button" class="qty-btn qty-plus" aria-label="زيادة الكمية">+</button>
+          </div>
+          <button type="button" class="btn btn-primary btn-block add-to-cart-btn">🛒 أضف للسلة</button>
+        </div>
+      `;
+
+      const qtyValue = card.querySelector('.qty-value');
+      card.querySelector('.qty-minus').addEventListener('click', () => {
+        qtyValue.textContent = String(Math.max(1, Number(qtyValue.textContent) - 1));
+      });
+      card.querySelector('.qty-plus').addEventListener('click', () => {
+        qtyValue.textContent = String(Number(qtyValue.textContent) + 1);
+      });
+      card.querySelector('.add-to-cart-btn').addEventListener('click', () => {
+        window.RayanCart.add(service.name, service.price, Number(qtyValue.textContent));
+        qtyValue.textContent = '1';
+      });
+
+      card.classList.add('in-view');
+      servicesGrid.appendChild(card);
+    });
+    document.dispatchEvent(new CustomEvent('rayan-content-updated'));
+  });
+
 // ===================== Reveal on scroll =====================
 if ('IntersectionObserver' in window) {
   const revealObserver = new IntersectionObserver((entries) => {
