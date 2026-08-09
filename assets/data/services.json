@@ -40,7 +40,8 @@
     "desc": "نعجة حامل أو على وشك الحمل، تُسلّم لأسرة من الأسر الفقيرة لتربيتها والاستفادة من إنتاجها — وليست للذبح.",
     "icon": "🐑",
     "defaultIntention": "صدقة",
-    "featured": false
+    "featured": false,
+    "image": "assets/services/pregnant-ewe-1786309465375.png"
   },
   {
     "id": "kiosk-or-sewing",
