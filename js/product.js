@@ -69,7 +69,11 @@ fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' })
     document.getElementById('productTag').textContent = product.tag;
     document.getElementById('productName').textContent = product.name;
     document.getElementById('productDesc').textContent = product.desc;
-    document.getElementById('productPrice').innerHTML = `${product.price.toLocaleString('en-US')} <span>ج.م</span>`;
+    const productPriceEl = document.getElementById('productPrice');
+    productPriceEl.classList.add('currency-price');
+    productPriceEl.dataset.egp = product.price;
+    productPriceEl.dataset.split = 'true';
+    productPriceEl.innerHTML = `${product.price.toLocaleString('en-US')} <span>ج.م</span>`;
     document.getElementById('productIntention').value = product.defaultIntention;
 
     // ---- Quantity stepper ----
@@ -113,9 +117,10 @@ fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' })
         <img src="${p.image}" alt="${p.name}" loading="lazy">
         <div class="other-product-info">
           <h4>${p.name}</h4>
-          <span>${p.price.toLocaleString('en-US')} ج.م</span>
+          <span class="currency-price" data-egp="${p.price}">${p.price.toLocaleString('en-US')} ج.م</span>
         </div>
       `;
       otherProductsEl.appendChild(a);
     });
+    document.dispatchEvent(new CustomEvent('rayan-content-updated'));
   });

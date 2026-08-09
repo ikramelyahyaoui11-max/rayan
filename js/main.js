@@ -257,7 +257,7 @@ fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' })
           <h3>${product.name}</h3>
           <p class="product-desc">${product.desc}</p>
           <span class="stars">★★★★★</span>
-          <div class="product-price">${product.price.toLocaleString('en-US')} <span>ج.م</span></div>
+          <div class="product-price currency-price" data-egp="${product.price}" data-split="true">${product.price.toLocaleString('en-US')} <span>ج.م</span></div>
         </a>
         <div class="product-actions">
           <div class="qty-stepper">
@@ -284,6 +284,7 @@ fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' })
       card.classList.add('in-view');
       productsGrid.appendChild(card);
     });
+    document.dispatchEvent(new CustomEvent('rayan-content-updated'));
   });
 
 // ===================== Reveal on scroll =====================

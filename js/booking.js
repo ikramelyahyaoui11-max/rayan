@@ -74,22 +74,32 @@ if (cartCheckoutData) {
   const summaryTotal = document.getElementById('cartSummaryTotal');
   summaryBlock.style.display = 'block';
 
-  let total = 0;
-  checkoutCart.forEach((item) => {
-    const lineTotal = item.price * item.qty;
-    total += lineTotal;
-    const row = document.createElement('div');
-    row.className = 'cart-summary-row';
-    const details = [];
-    if (item.intention) details.push(`النية: ${item.intention}`);
-    if (item.note) details.push(`الاسم: ${item.note}`);
-    if (item.addons && item.addons !== 'بدون إضافات') details.push(item.addons);
-    if (item.delivery) details.push(`التسليم: ${item.delivery}`);
-    const detailsText = details.length ? ` (${details.join(' - ')})` : '';
-    row.textContent = `${item.name}${detailsText} × ${item.qty} — ${lineTotal.toLocaleString('en-US')} ج.م`;
-    summaryList.appendChild(row);
-  });
-  summaryTotal.textContent = `الإجمالي: ${total.toLocaleString('en-US')} ج.م`;
+  function fmt(egp) {
+    return window.RayanCurrency ? window.RayanCurrency.format(egp) : `${egp.toLocaleString('en-US')} ج.م`;
+  }
+
+  function renderSummary() {
+    summaryList.innerHTML = '';
+    let total = 0;
+    checkoutCart.forEach((item) => {
+      const lineTotal = item.price * item.qty;
+      total += lineTotal;
+      const row = document.createElement('div');
+      row.className = 'cart-summary-row';
+      const details = [];
+      if (item.intention) details.push(`النية: ${item.intention}`);
+      if (item.note) details.push(`الاسم: ${item.note}`);
+      if (item.addons && item.addons !== 'بدون إضافات') details.push(item.addons);
+      if (item.delivery) details.push(`التسليم: ${item.delivery}`);
+      const detailsText = details.length ? ` (${details.join(' - ')})` : '';
+      row.textContent = `${item.name}${detailsText} × ${item.qty} — ${fmt(lineTotal)}`;
+      summaryList.appendChild(row);
+    });
+    summaryTotal.textContent = `الإجمالي: ${fmt(total)}`;
+  }
+
+  renderSummary();
+  document.addEventListener('rayan-currency-change', renderSummary);
 }
 
 // GoatCounter's script loads async - on a fast click right after page load it

@@ -35,7 +35,7 @@ function renderCart() {
       <div class="cart-item-info">
         <h4>${item.name}</h4>
         ${details.length ? `<span class="cart-item-note">${details.join(' · ')}</span>` : ''}
-        <span class="cart-item-price">${item.price.toLocaleString('en-US')} ج.م × ${item.qty}</span>
+        <span class="cart-item-price">${window.RayanCurrency ? window.RayanCurrency.format(item.price) : item.price.toLocaleString('en-US') + ' ج.م'} × ${item.qty}</span>
       </div>
       <div class="cart-item-qty">
         <button type="button" class="qty-btn cart-qty-minus" aria-label="إنقاص الكمية">−</button>
@@ -63,8 +63,10 @@ function renderCart() {
   });
 
   const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  cartTotalEl.textContent = `${total.toLocaleString('en-US')} ج.م`;
+  cartTotalEl.textContent = window.RayanCurrency ? window.RayanCurrency.format(total) : `${total.toLocaleString('en-US')} ج.م`;
 }
+
+document.addEventListener('rayan-currency-change', renderCart);
 
 function openCart() {
   cartDrawer.classList.add('open');
