@@ -224,7 +224,7 @@ function renderProducts() {
 }
 
 // ===================== Upload image =====================
-function fileToBase64(file) {
+function fileToBase64(fileOrBlob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -232,14 +232,45 @@ function fileToBase64(file) {
       resolve(base64);
     };
     reader.onerror = reject;
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(fileOrBlob);
+  });
+}
+
+// Resizes to a max dimension and re-encodes as WebP so uploads stay small and fast to load on the public site
+function compressImageFile(file, maxDim = 1400, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let { width, height } = img;
+      if (width > maxDim || height > maxDim) {
+        if (width >= height) {
+          height = Math.round((height * maxDim) / width);
+          width = maxDim;
+        } else {
+          width = Math.round((width * maxDim) / height);
+          height = maxDim;
+        }
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      canvas.toBlob((blob) => {
+        if (blob) resolve(blob);
+        else reject(new Error('فشل ضغط الصورة'));
+      }, 'image/webp', quality);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('تعذّر قراءة الصورة')); };
+    img.src = url;
   });
 }
 
 async function uploadImage(file, productId) {
-  const ext = file.name.split('.').pop();
-  const path = `assets/products/${productId}-${Date.now()}.${ext}`;
-  const base64 = await fileToBase64(file);
+  const compressed = await compressImageFile(file);
+  const path = `assets/products/${productId}-${Date.now()}.webp`;
+  const base64 = await fileToBase64(compressed);
 
   const res = await fetch(apiUrl(path), {
     method: 'PUT',
@@ -258,9 +289,9 @@ async function uploadImage(file, productId) {
 }
 
 async function uploadServiceImage(file, serviceId) {
-  const ext = file.name.split('.').pop();
-  const path = `assets/services/${serviceId}-${Date.now()}.${ext}`;
-  const base64 = await fileToBase64(file);
+  const compressed = await compressImageFile(file);
+  const path = `assets/services/${serviceId}-${Date.now()}.webp`;
+  const base64 = await fileToBase64(compressed);
 
   const res = await fetch(apiUrl(path), {
     method: 'PUT',
