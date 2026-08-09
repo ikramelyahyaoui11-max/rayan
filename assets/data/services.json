@@ -18,7 +18,8 @@
     "desc": "بطانية تُسلّم لأسرة فقيرة أو للعمال والفقراء، من الصدقات الجارية المهمة في هذا الوقت.",
     "icon": "🛏️",
     "defaultIntention": "صدقة",
-    "featured": false
+    "featured": false,
+    "image": "assets/services/blanket-1786308900251.png"
   },
   {
     "id": "solar-light",
