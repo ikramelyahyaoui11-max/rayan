@@ -692,6 +692,25 @@ darkModeToggle.addEventListener('click', () => {
 
 applyDarkMode(localStorage.getItem(DARK_MODE_KEY) === 'yes');
 
+// ===================== Mobile sidebar drawer =====================
+const adminMenuToggle = document.getElementById('adminMenuToggle');
+const adminSidebar = document.getElementById('adminSidebar');
+const adminSidebarOverlay = document.getElementById('adminSidebarOverlay');
+
+function closeSidebar() {
+  adminSidebar.classList.remove('open');
+  adminSidebarOverlay.classList.remove('open');
+}
+
+adminMenuToggle.addEventListener('click', () => {
+  adminSidebar.classList.toggle('open');
+  adminSidebarOverlay.classList.toggle('open');
+});
+adminSidebarOverlay.addEventListener('click', closeSidebar);
+adminSidebar.querySelectorAll('.nav-link').forEach((link) => {
+  link.addEventListener('click', closeSidebar);
+});
+
 // ===================== Products: table view =====================
 const productsTableWrap = document.getElementById('productsTableWrap');
 const productsTableBody = document.getElementById('productsTableBody');
