@@ -7,7 +7,8 @@
     "desc": "حفر مواسير مياه جوفية بموتور وحنفية وخزان مياة 500 لتر. التنفيذ خلال 10 أيام مع توثيق بالحفر والتنفيذ، ورخامة مكتوب عليها اسم البئر الذي تختاره.",
     "icon": "",
     "defaultIntention": "صدقة",
-    "featured": true
+    "featured": true,
+    "image": "assets/services/water-well-egypt-1786308850751.png"
   },
   {
     "id": "blanket",
