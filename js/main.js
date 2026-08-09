@@ -300,7 +300,9 @@ fetch(`assets/data/services.json?v=${Date.now()}`, { cache: 'no-store' })
       card.dataset.product = service.name;
       card.dataset.price = service.price;
       card.innerHTML = `
-        <div class="product-card-image product-card-icon"><span>${service.icon}</span></div>
+        ${service.image
+          ? `<div class="product-card-image"><img src="${service.image}" alt="${service.name}"></div>`
+          : `<div class="product-card-image product-card-icon"><span>${service.icon}</span></div>`}
         <span class="product-tag">${service.tag}</span>
         <h3>${service.name}</h3>
         <p class="product-desc">${service.desc}</p>

@@ -257,6 +257,27 @@ async function uploadImage(file, productId) {
   return path;
 }
 
+async function uploadServiceImage(file, serviceId) {
+  const ext = file.name.split('.').pop();
+  const path = `assets/services/${serviceId}-${Date.now()}.${ext}`;
+  const base64 = await fileToBase64(file);
+
+  const res = await fetch(apiUrl(path), {
+    method: 'PUT',
+    headers: ghHeaders(),
+    body: JSON.stringify({
+      message: `Upload image for ${serviceId} via admin panel`,
+      content: base64,
+      branch: 'main',
+    }),
+  });
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.message || `HTTP ${res.status}`);
+  }
+  return path;
+}
+
 // ===================== Add product =====================
 addProductBtn.addEventListener('click', async () => {
   addError.textContent = '';
@@ -876,8 +897,10 @@ function renderExtraServices() {
       <div class="card-body p-3">
         <div class="row g-3">
           <div class="col-md-3 text-center">
-            <div class="admin-service-icon-preview">${service.icon}</div>
-            <input type="text" class="form-control form-control-sm mt-2 s-icon" value="${service.icon}" placeholder="💧">
+            <img src="${service.image || ''}" alt="${service.name}" class="img-fluid rounded-3 mb-2 admin-product-thumb s-image-preview" style="${service.image ? '' : 'display:none;'}">
+            <div class="admin-service-icon-preview s-icon-preview" style="${service.image ? 'display:none;' : ''}">${service.icon}</div>
+            <input type="file" class="form-control form-control-sm mb-2 admin-image-input s-image-input" accept="image/*">
+            <input type="text" class="form-control form-control-sm s-icon" value="${service.icon}" placeholder="💧 أيقونة (احتياطية)">
           </div>
           <div class="col-md-9">
             <div class="row g-2 text-start">
@@ -930,8 +953,25 @@ function renderExtraServices() {
     card.querySelector('.s-featured').addEventListener('change', (e) => { service.featured = e.target.checked; scheduleSaveServices(); });
     card.querySelector('.s-icon').addEventListener('change', (e) => {
       service.icon = e.target.value;
-      card.querySelector('.admin-service-icon-preview').textContent = e.target.value;
+      card.querySelector('.s-icon-preview').textContent = e.target.value;
       scheduleSaveServices();
+    });
+
+    card.querySelector('.s-image-input').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        showServicesStatus('جاري رفع الصورة...', false);
+        const path = await uploadServiceImage(file, service.id);
+        service.image = path;
+        const url = `https://raw.githubusercontent.com/${REPO_OWNER}/${REPO_NAME}/main/${path}`;
+        card.querySelector('.s-image-preview').src = url;
+        card.querySelector('.s-image-preview').style.display = '';
+        card.querySelector('.s-icon-preview').style.display = 'none';
+        await persistExtraServices();
+      } catch (err) {
+        showServicesStatus(`فشل رفع الصورة: ${err.message}`, true);
+      }
     });
 
     card.querySelector('.s-delete').addEventListener('click', () => {
@@ -952,6 +992,7 @@ addServiceBtn.addEventListener('click', async () => {
   const tag = document.getElementById('newServiceTag').value.trim();
   const price = Number(document.getElementById('newServicePrice').value);
   const icon = document.getElementById('newServiceIcon').value.trim() || '🤲';
+  const imageFile = document.getElementById('newServiceImage').files[0];
   const intention = document.getElementById('newServiceIntention').value;
   const desc = document.getElementById('newServiceDesc').value.trim();
 
@@ -964,8 +1005,21 @@ addServiceBtn.addEventListener('click', async () => {
     return;
   }
 
+  addServiceBtn.disabled = true;
+  let image = '';
+  if (imageFile) {
+    try {
+      showServicesStatus('جاري رفع الصورة...', false);
+      image = await uploadServiceImage(imageFile, id);
+    } catch (err) {
+      addServiceError.textContent = `فشل رفع الصورة: ${err.message}`;
+      addServiceBtn.disabled = false;
+      return;
+    }
+  }
+
   extraServices.push({
-    id, name, tag: tag || 'صدقة جارية', price, desc: desc || '', icon,
+    id, name, tag: tag || 'صدقة جارية', price, desc: desc || '', icon, image,
     defaultIntention: intention, featured: false,
   });
 
@@ -974,10 +1028,12 @@ addServiceBtn.addEventListener('click', async () => {
   document.getElementById('newServiceTag').value = '';
   document.getElementById('newServicePrice').value = '';
   document.getElementById('newServiceIcon').value = '';
+  document.getElementById('newServiceImage').value = '';
   document.getElementById('newServiceDesc').value = '';
 
   renderExtraServices();
   await persistExtraServices();
+  addServiceBtn.disabled = false;
 });
 
 let servicesSaveInProgress = false;
