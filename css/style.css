@@ -857,8 +857,25 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   border-radius: 999px;
   margin-bottom: 14px;
 }
-.product-card h3 { font-size: 19px; margin-bottom: 8px; }
-.product-desc { color: var(--text-muted); font-size: 14px; margin-bottom: 18px; min-height: 44px; }
+.product-card h3 {
+  font-size: 19px;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-height: 62px;
+}
+.product-desc {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 18px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  min-height: 68px;
+}
 .product-price {
   font-family: 'Cairo', sans-serif;
   font-weight: 800;
