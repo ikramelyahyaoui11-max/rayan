@@ -822,6 +822,7 @@ const settingWhatsapp = document.getElementById('settingWhatsapp');
 const settingPhone = document.getElementById('settingPhone');
 const settingHeroTitle = document.getElementById('settingHeroTitle');
 const settingHeroDesc = document.getElementById('settingHeroDesc');
+const settingRicePricePerKg = document.getElementById('settingRicePricePerKg');
 const saveSettingsBtn = document.getElementById('saveSettingsBtn');
 const settingsStatusMsg = document.getElementById('settingsStatusMsg');
 
@@ -842,6 +843,7 @@ async function initSettingsTab() {
       settingPhone.value = settings.phone || '';
       settingHeroTitle.value = settings.heroTitle || '';
       settingHeroDesc.value = settings.heroDesc || '';
+      settingRicePricePerKg.value = settings.ricePricePerKg || 70;
       settingsLoaded = true;
     }
   } catch (err) { /* file may not exist yet - form stays empty, sha stays null */ }
@@ -853,6 +855,7 @@ saveSettingsBtn.addEventListener('click', async () => {
     phone: settingPhone.value.trim(),
     heroTitle: settingHeroTitle.value.trim(),
     heroDesc: settingHeroDesc.value.trim(),
+    ricePricePerKg: Number(settingRicePricePerKg.value) || 70,
   };
   saveSettingsBtn.disabled = true;
   showSettingsStatus('⏳ جاري الحفظ...', false);
