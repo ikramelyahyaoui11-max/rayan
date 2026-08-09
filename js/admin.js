@@ -610,7 +610,7 @@ async function loadStats() {
     let whatsappClicks = '—';
     try {
       const hitsData = await goatFetch(site, key, `stats/hits?limit=100&start=${startStr}&end=${endStr}`);
-      const match = hitsData?.hits?.find((h) => h.path === '/click-whatsapp-order');
+      const match = hitsData?.hits?.find((h) => h.path === 'click-whatsapp-order' || h.path === '/click-whatsapp-order');
       whatsappClicks = match ? (match.count ?? match.count_unique ?? 0) : 0;
     } catch (e) { /* keep placeholder, non-critical */ }
 
