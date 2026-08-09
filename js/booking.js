@@ -92,6 +92,17 @@ if (cartCheckoutData) {
   summaryTotal.textContent = `الإجمالي: ${total.toLocaleString('en-US')} ج.م`;
 }
 
+// GoatCounter's script loads async - on a fast click right after page load it
+// may not be ready yet. Retry briefly instead of silently dropping the event
+// (the WhatsApp redirect itself never waits on this).
+function trackWhatsAppClick(attemptsLeft) {
+  if (window.goatcounter && window.goatcounter.count) {
+    window.goatcounter.count({ path: 'click-whatsapp-order', title: 'WhatsApp order click', event: true });
+  } else if (attemptsLeft > 0) {
+    setTimeout(() => trackWhatsAppClick(attemptsLeft - 1), 200);
+  }
+}
+
 bookingForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
@@ -129,9 +140,7 @@ bookingForm.addEventListener('submit', (e) => {
     ...orderLines,
   ].filter(Boolean).join('\n');
 
-  if (window.goatcounter && window.goatcounter.count) {
-    window.goatcounter.count({ path: 'click-whatsapp-order', title: 'WhatsApp order click', event: true });
-  }
+  trackWhatsAppClick(5);
 
   const waNumber = (window.RayanSettings && window.RayanSettings.data && window.RayanSettings.data.whatsapp) || '201008659399';
   const url = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
