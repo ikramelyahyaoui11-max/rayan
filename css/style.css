@@ -1150,6 +1150,15 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   background: var(--cream);
   display: block;
 }
+.product-detail-icon {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--green-light), var(--cream));
+}
+.product-detail-icon span { font-size: 96px; }
 .product-detail-info .product-tag { margin-bottom: 10px; }
 .product-detail-info { text-align: right; }
 .product-detail-info h1 {
@@ -1213,6 +1222,16 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   background: var(--cream);
   flex-shrink: 0;
 }
+.other-product-icon {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--green-light), var(--cream));
+}
+.other-product-icon span { font-size: 40px; }
 .other-product-info { padding: 12px 14px 16px; text-align: center; }
 .other-product-info h4 { font-size: 15px; margin-bottom: 4px; }
 .other-product-info span { font-size: 14px; font-weight: 700; color: var(--green-dark); }

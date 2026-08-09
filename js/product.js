@@ -56,16 +56,28 @@ backToTop.addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-// ===================== Product data (loaded from assets/data/products.json) =====================
-fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' })
-  .then((res) => res.json())
-  .then((PRODUCTS) => {
+// ===================== Product data (loaded from products.json + services.json) =====================
+Promise.all([
+  fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' }).then((res) => res.json()),
+  fetch(`assets/data/services.json?v=${Date.now()}`, { cache: 'no-store' }).then((res) => res.json()),
+]).then(([products, services]) => {
+    const PRODUCTS = [...products, ...services];
     const params = new URLSearchParams(window.location.search);
     const product = PRODUCTS.find((p) => p.id === params.get('id')) || PRODUCTS[0];
 
     document.getElementById('pageTitle').textContent = `${product.name} | مؤسسة الريان لتنفيذ المشروعات بأفريقيا`;
-    document.getElementById('productImage').src = product.image;
-    document.getElementById('productImage').alt = product.name;
+    const productImageEl = document.getElementById('productImage');
+    const productIconEl = document.getElementById('productIcon');
+    if (product.image) {
+      productImageEl.src = product.image;
+      productImageEl.alt = product.name;
+      productImageEl.style.display = '';
+      productIconEl.style.display = 'none';
+    } else {
+      productImageEl.style.display = 'none';
+      productIconEl.style.display = 'flex';
+      productIconEl.querySelector('span').textContent = product.icon || '🤲';
+    }
     document.getElementById('productTag').textContent = product.tag;
     document.getElementById('productName').textContent = product.name;
     document.getElementById('productDesc').textContent = product.desc;
@@ -114,7 +126,9 @@ fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' })
       a.className = 'other-product-card';
       a.href = `product.html?id=${p.id}`;
       a.innerHTML = `
-        <img src="${p.image}" alt="${p.name}" loading="lazy">
+        ${p.image
+          ? `<img src="${p.image}" alt="${p.name}" loading="lazy">`
+          : `<div class="other-product-icon"><span>${p.icon || '🤲'}</span></div>`}
         <div class="other-product-info">
           <h4>${p.name}</h4>
           <span class="currency-price" data-egp="${p.price}">${p.price.toLocaleString('en-US')} ج.م</span>
