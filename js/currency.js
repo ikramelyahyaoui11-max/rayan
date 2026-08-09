@@ -5,7 +5,7 @@ window.RayanCurrency = (function () {
   const KEY = 'rayan_currency';
   const RATES = { EGP: 1, USD: 1 / 49, SAR: 1 / 13.05 };
   const SYMBOLS = { EGP: 'ج.م', USD: '$', SAR: 'ر.س' };
-  const LABELS = { EGP: 'ج.م', USD: '$', SAR: 'ر.س' };
+  const LABELS = { EGP: 'جنيه مصري (ج.م)', USD: 'دولار ($)', SAR: 'ريال سعودي (ر.س)' };
 
   function getCurrency() {
     return localStorage.getItem(KEY) || 'EGP';
@@ -36,12 +36,15 @@ window.RayanCurrency = (function () {
 
   function renderSwitcher(container) {
     if (!container) return;
-    container.innerHTML = Object.keys(RATES).map((code) => (
-      `<button type="button" class="currency-pill${code === getCurrency() ? ' active' : ''}" data-currency="${code}">${LABELS[code]}</button>`
-    )).join('');
-    container.querySelectorAll('.currency-pill').forEach((btn) => {
-      btn.addEventListener('click', () => setCurrency(btn.dataset.currency));
-    });
+    const current = getCurrency();
+    container.innerHTML = `
+      <select class="currency-select" aria-label="اختر العملة">
+        ${Object.keys(RATES).map((code) => (
+          `<option value="${code}"${code === current ? ' selected' : ''}>${LABELS[code]}</option>`
+        )).join('')}
+      </select>
+    `;
+    container.querySelector('.currency-select').addEventListener('change', (e) => setCurrency(e.target.value));
   }
 
   // Elements marked with class="currency-price" and data-egp="<amount>" are
