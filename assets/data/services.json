@@ -8,7 +8,7 @@
     "icon": "",
     "defaultIntention": "صدقة",
     "featured": true,
-    "image": "assets/services/water-well-egypt-1786308850751.png"
+    "image": "assets/services/water-well-egypt-1786308850751.webp"
   },
   {
     "id": "blanket",
@@ -19,7 +19,7 @@
     "icon": "🛏️",
     "defaultIntention": "صدقة",
     "featured": false,
-    "image": "assets/services/blanket-1786308900251.png"
+    "image": "assets/services/blanket-1786308900251.webp"
   },
   {
     "id": "solar-light",
@@ -30,7 +30,7 @@
     "icon": "☀️",
     "defaultIntention": "صدقة",
     "featured": false,
-    "image": "assets/services/solar-light-1786308915794.png"
+    "image": "assets/services/solar-light-1786308915794.webp"
   },
   {
     "id": "pregnant-ewe",
@@ -41,7 +41,7 @@
     "icon": "🐑",
     "defaultIntention": "صدقة",
     "featured": false,
-    "image": "assets/services/pregnant-ewe-1786309465375.png"
+    "image": "assets/services/pregnant-ewe-1786309465375.webp"
   },
   {
     "id": "kiosk-or-sewing",
@@ -52,7 +52,7 @@
     "icon": "🏪",
     "defaultIntention": "صدقة",
     "featured": false,
-    "image": "assets/services/kiosk-or-sewing-1786309206115.png"
+    "image": "assets/services/kiosk-or-sewing-1786309206115.webp"
   },
   {
     "id": "well-tanzania-manual",
@@ -63,7 +63,7 @@
     "icon": "💧",
     "defaultIntention": "صدقة",
     "featured": false,
-    "image": "assets/services/well-tanzania-manual-1786309243267.png"
+    "image": "assets/services/well-tanzania-manual-1786309243267.webp"
   },
   {
     "id": "well-tanzania-pump",
@@ -74,6 +74,6 @@
     "icon": "💧",
     "defaultIntention": "صدقة",
     "featured": false,
-    "image": "assets/services/well-tanzania-pump-1786309258338.png"
+    "image": "assets/services/well-tanzania-pump-1786309258338.webp"
   }
 ]
