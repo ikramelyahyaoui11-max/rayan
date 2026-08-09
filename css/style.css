@@ -1594,6 +1594,17 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
 
 .admin-product-thumb { width: 100%; aspect-ratio: 1 / 1; object-fit: contain; background: var(--cream); }
 
+.admin-service-icon-preview {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  background: linear-gradient(135deg, var(--green-light), var(--cream));
+  border-radius: var(--radius-md);
+}
+
 .admin-stat-num {
   font-family: 'Cairo', sans-serif;
   font-weight: 900;

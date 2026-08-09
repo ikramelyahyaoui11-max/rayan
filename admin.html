@@ -55,6 +55,9 @@
         <button type="button" class="nav-link admin-nav-link text-start" id="menuProductsBtn">
           📦 المنتجات
         </button>
+        <button type="button" class="nav-link admin-nav-link text-start" id="menuServicesBtn">
+          🛠️ خدمات أخرى
+        </button>
         <button type="button" class="nav-link admin-nav-link text-start" id="menuStatsBtn">
           📊 الإحصائيات
         </button>
@@ -209,6 +212,60 @@
           </div>
         </div>
 
+        <!-- ===== Other services tab ===== -->
+        <div id="servicesTab" style="display:none;">
+          <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+            <p class="text-muted mb-0">أضيفي، عدّلي، أو احذفي المشاريع الخيرية الأخرى (آبار، بطانيات، إلخ)</p>
+            <button type="button" class="btn btn-admin-primary fw-bold" id="saveServicesBtn">💾 حفظ كل التغييرات على الموقع</button>
+          </div>
+          <p class="mb-3" id="servicesStatusMsg"></p>
+
+          <div class="d-flex flex-column gap-3 mb-4" id="servicesList"></div>
+
+          <div class="card admin-card border-dashed">
+            <div class="card-body p-4">
+              <h5 class="fw-bold mb-3">➕ إضافة خدمة جديدة</h5>
+              <div class="row g-3 mb-3 text-start">
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold">معرف فريد (بالإنجليزية، بدون مسافات)</label>
+                  <input type="text" class="form-control" id="newServiceId" placeholder="مثال: well-egypt-2">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold">الاسم</label>
+                  <input type="text" class="form-control" id="newServiceName" placeholder="مثال: بئر مياه">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold">الوسم (Tag)</label>
+                  <input type="text" class="form-control" id="newServiceTag" placeholder="مثال: صدقة جارية">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold">السعر (ج.م)</label>
+                  <input type="number" class="form-control" id="newServicePrice" placeholder="8000">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold">أيقونة (إيموجي)</label>
+                  <input type="text" class="form-control" id="newServiceIcon" placeholder="💧">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small fw-bold">النية الافتراضية</label>
+                  <select class="form-select" id="newServiceIntention">
+                    <option value="صدقة">صدقة</option>
+                    <option value="أضحية">أضحية</option>
+                    <option value="عقيقة">عقيقة</option>
+                    <option value="نذر">نذر</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label class="form-label small fw-bold">الوصف</label>
+                  <input type="text" class="form-control" id="newServiceDesc" placeholder="وصف قصير للخدمة">
+                </div>
+              </div>
+              <button type="button" class="btn btn-admin-primary" id="addServiceBtn">إضافة الخدمة</button>
+              <p class="text-danger small mt-2 mb-0" id="addServiceError"></p>
+            </div>
+          </div>
+        </div>
+
         <!-- ===== Statistics tab ===== -->
         <div id="statsTab" style="display:none;">
 
@@ -321,7 +378,7 @@
     </div>
   </div>
 
-<script src="js/admin.js?v=20260809b"></script>
+<script src="js/admin.js?v=20260809c"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4" defer></script>
 </body>
 </html>

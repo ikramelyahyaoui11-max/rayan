@@ -401,6 +401,7 @@ const pageTitle = document.getElementById('pageTitle');
 const TABS = {
   home: { btn: 'menuHomeBtn', tab: 'homeTab', title: 'الرئيسية', onShow: renderHomeTab },
   products: { btn: 'menuProductsBtn', tab: 'productsTab', title: 'إدارة المنتجات' },
+  services: { btn: 'menuServicesBtn', tab: 'servicesTab', title: 'خدمات أخرى', onShow: initServicesTab },
   stats: { btn: 'menuStatsBtn', tab: 'statsTab', title: 'الإحصائيات', onShow: initStatsTab },
   settings: { btn: 'menuSettingsBtn', tab: 'settingsTab', title: 'الإعدادات', onShow: initSettingsTab },
 };
@@ -827,6 +828,223 @@ saveSettingsBtn.addEventListener('click', async () => {
     saveSettingsBtn.disabled = false;
   }
 });
+
+// ===================== Other services tab =====================
+const SERVICES_PATH = 'assets/data/services.json';
+let extraServices = [];
+let extraServicesSha = null;
+let servicesLoaded = false;
+
+const servicesList = document.getElementById('servicesList');
+const saveServicesBtn = document.getElementById('saveServicesBtn');
+const servicesStatusMsg = document.getElementById('servicesStatusMsg');
+const addServiceBtn = document.getElementById('addServiceBtn');
+const addServiceError = document.getElementById('addServiceError');
+
+function showServicesStatus(message, isError) {
+  servicesStatusMsg.textContent = message;
+  servicesStatusMsg.className = message ? `alert ${isError ? 'alert-danger' : 'alert-success'} py-2 px-3 small mb-3` : 'mb-3';
+}
+
+async function initServicesTab() {
+  if (servicesLoaded) return;
+  await loadExtraServices();
+}
+
+async function loadExtraServices() {
+  showServicesStatus('جاري التحميل...', false);
+  try {
+    const res = await fetch(apiUrl(SERVICES_PATH), { headers: ghHeaders() });
+    if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
+    const data = await res.json();
+    extraServicesSha = data.sha;
+    extraServices = JSON.parse(base64ToUtf8(data.content));
+    servicesLoaded = true;
+    renderExtraServices();
+    showServicesStatus('', false);
+  } catch (err) {
+    showServicesStatus(`حدث خطأ أثناء التحميل: ${err.message}`, true);
+  }
+}
+
+function renderExtraServices() {
+  servicesList.innerHTML = '';
+  extraServices.forEach((service, index) => {
+    const card = document.createElement('div');
+    card.className = 'card admin-card admin-product-card';
+    card.innerHTML = `
+      <div class="card-body p-3">
+        <div class="row g-3">
+          <div class="col-md-3 text-center">
+            <div class="admin-service-icon-preview">${service.icon}</div>
+            <input type="text" class="form-control form-control-sm mt-2 s-icon" value="${service.icon}" placeholder="💧">
+          </div>
+          <div class="col-md-9">
+            <div class="row g-2 text-start">
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">الاسم</label>
+                <input type="text" class="form-control form-control-sm s-name" value="${service.name}">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">الوسم (Tag)</label>
+                <input type="text" class="form-control form-control-sm s-tag" value="${service.tag}">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">السعر (ج.م)</label>
+                <input type="number" class="form-control form-control-sm s-price" value="${service.price}">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">النية الافتراضية</label>
+                <select class="form-select form-select-sm s-intention">
+                  <option value="صدقة">صدقة</option>
+                  <option value="أضحية">أضحية</option>
+                  <option value="عقيقة">عقيقة</option>
+                  <option value="نذر">نذر</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold mb-1">الوصف</label>
+                <input type="text" class="form-control form-control-sm s-desc" value="${service.desc}">
+              </div>
+              <div class="col-12 d-flex align-items-center justify-content-between mt-2">
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input s-featured" id="s-featured-${service.id}">
+                  <label class="form-check-label small" for="s-featured-${service.id}">مميز (إطار برتقالي)</label>
+                </div>
+                <button type="button" class="btn btn-outline-danger btn-sm s-delete">🗑️ حذف الخدمة</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    card.querySelector('.s-intention').value = service.defaultIntention;
+    card.querySelector('.s-featured').checked = Boolean(service.featured);
+
+    card.querySelector('.s-name').addEventListener('change', (e) => { service.name = e.target.value; scheduleSaveServices(); });
+    card.querySelector('.s-tag').addEventListener('change', (e) => { service.tag = e.target.value; scheduleSaveServices(); });
+    card.querySelector('.s-price').addEventListener('change', (e) => { service.price = Number(e.target.value); scheduleSaveServices(); });
+    card.querySelector('.s-desc').addEventListener('change', (e) => { service.desc = e.target.value; scheduleSaveServices(); });
+    card.querySelector('.s-intention').addEventListener('change', (e) => { service.defaultIntention = e.target.value; scheduleSaveServices(); });
+    card.querySelector('.s-featured').addEventListener('change', (e) => { service.featured = e.target.checked; scheduleSaveServices(); });
+    card.querySelector('.s-icon').addEventListener('change', (e) => {
+      service.icon = e.target.value;
+      card.querySelector('.admin-service-icon-preview').textContent = e.target.value;
+      scheduleSaveServices();
+    });
+
+    card.querySelector('.s-delete').addEventListener('click', () => {
+      if (!confirm(`هل تريد حذف "${service.name}"؟`)) return;
+      extraServices.splice(index, 1);
+      renderExtraServices();
+      persistExtraServices();
+    });
+
+    servicesList.appendChild(card);
+  });
+}
+
+addServiceBtn.addEventListener('click', async () => {
+  addServiceError.textContent = '';
+  const id = document.getElementById('newServiceId').value.trim();
+  const name = document.getElementById('newServiceName').value.trim();
+  const tag = document.getElementById('newServiceTag').value.trim();
+  const price = Number(document.getElementById('newServicePrice').value);
+  const icon = document.getElementById('newServiceIcon').value.trim() || '🤲';
+  const intention = document.getElementById('newServiceIntention').value;
+  const desc = document.getElementById('newServiceDesc').value.trim();
+
+  if (!id || !name || !price) {
+    addServiceError.textContent = 'الرجاء تعبئة الحقول الأساسية: المعرف، الاسم، السعر.';
+    return;
+  }
+  if (extraServices.some((s) => s.id === id)) {
+    addServiceError.textContent = 'هذا المعرف مستخدم بالفعل، اختر معرفًا آخر.';
+    return;
+  }
+
+  extraServices.push({
+    id, name, tag: tag || 'صدقة جارية', price, desc: desc || '', icon,
+    defaultIntention: intention, featured: false,
+  });
+
+  document.getElementById('newServiceId').value = '';
+  document.getElementById('newServiceName').value = '';
+  document.getElementById('newServiceTag').value = '';
+  document.getElementById('newServicePrice').value = '';
+  document.getElementById('newServiceIcon').value = '';
+  document.getElementById('newServiceDesc').value = '';
+
+  renderExtraServices();
+  await persistExtraServices();
+});
+
+let servicesSaveInProgress = false;
+let servicesSaveQueued = false;
+let servicesSaveDebounceTimer = null;
+
+function scheduleSaveServices() {
+  showServicesStatus('⏳ جاري تجهيز الحفظ...', false);
+  clearTimeout(servicesSaveDebounceTimer);
+  servicesSaveDebounceTimer = setTimeout(() => { persistExtraServices(); }, 600);
+}
+
+async function putExtraServices(attemptsLeft) {
+  const res = await fetch(apiUrl(SERVICES_PATH), {
+    method: 'PUT',
+    headers: ghHeaders(),
+    body: JSON.stringify({
+      message: 'Update other services via admin panel',
+      content: utf8ToBase64(JSON.stringify(extraServices, null, 2)),
+      sha: extraServicesSha,
+      branch: 'main',
+    }),
+  });
+
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    const message = errData.message || `HTTP ${res.status}`;
+    const isConflict = res.status === 409 || res.status === 422 || /sha|does not match|expected/i.test(message);
+    if (isConflict && attemptsLeft > 0) {
+      const freshRes = await fetch(apiUrl(SERVICES_PATH), { headers: ghHeaders() });
+      const freshData = await freshRes.json();
+      extraServicesSha = freshData.sha;
+      return putExtraServices(attemptsLeft - 1);
+    }
+    throw new Error(message);
+  }
+
+  const data = await res.json();
+  extraServicesSha = data.content.sha;
+}
+
+async function persistExtraServices() {
+  if (servicesSaveInProgress) {
+    servicesSaveQueued = true;
+    return;
+  }
+  servicesSaveInProgress = true;
+  saveServicesBtn.disabled = true;
+  addServiceBtn.disabled = true;
+  showServicesStatus('⏳ جاري الحفظ على GitHub...', false);
+  try {
+    await putExtraServices(3);
+    showServicesStatus('✅ تم الحفظ بنجاح! التغييرات ستظهر على الموقع خلال دقيقة تقريبًا.', false);
+  } catch (err) {
+    showServicesStatus(`فشل الحفظ: ${err.message}`, true);
+  } finally {
+    servicesSaveInProgress = false;
+    saveServicesBtn.disabled = false;
+    addServiceBtn.disabled = false;
+    if (servicesSaveQueued) {
+      servicesSaveQueued = false;
+      persistExtraServices();
+    }
+  }
+}
+
+saveServicesBtn.addEventListener('click', persistExtraServices);
 
 // ===================== Init =====================
 // Support a one-time "magic link" (admin.html?pw=...) that logs in
