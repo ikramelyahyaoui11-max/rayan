@@ -72,6 +72,7 @@
     "desc": "حفر بئر مزود بطرمبة لتوفير مياه الشرب النظيفة لأهالي تنزانيا.",
     "icon": "💧",
     "defaultIntention": "صدقة",
-    "featured": false
+    "featured": false,
+    "image": "assets/services/well-tanzania-pump-1786309258338.png"
   }
 ]
