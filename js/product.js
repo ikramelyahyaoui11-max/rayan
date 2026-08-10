@@ -108,9 +108,11 @@ Promise.all([
       if (currency === 'USD') {
         if (is5 && product.priceWithRice5kgUSD) return { amount: product.priceWithRice5kgUSD, symbol };
         if (is10 && product.priceWithRice10kgUSD) return { amount: product.priceWithRice10kgUSD, symbol };
+        if (!is5 && !is10 && product.priceUSD) return { amount: product.priceUSD, symbol };
       } else if (currency === 'SAR') {
         if (is5 && product.priceWithRice5kgSAR) return { amount: product.priceWithRice5kgSAR, symbol };
         if (is10 && product.priceWithRice10kgSAR) return { amount: product.priceWithRice10kgSAR, symbol };
+        if (!is5 && !is10 && product.priceSAR) return { amount: product.priceSAR, symbol };
       }
       return null;
     }

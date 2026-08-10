@@ -178,6 +178,14 @@ function renderProducts() {
                 <input type="text" class="form-control form-control-sm f-desc" value="${product.desc}">
               </div>
               <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">السعر بالدولار (بدون إضافات) ($)</label>
+                <input type="number" step="0.1" class="form-control form-control-sm f-price-usd" value="${product.priceUSD ?? defaultRiceUSD(product.price)}">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">السعر بالريال السعودي (بدون إضافات) (ر.س)</label>
+                <input type="number" step="0.1" class="form-control form-control-sm f-price-sar" value="${product.priceSAR ?? defaultRiceSAR(product.price)}">
+              </div>
+              <div class="col-sm-6">
                 <label class="form-label small fw-bold mb-1">السعر الكلي مع (5 كيلو) أرز (ج.م)</label>
                 <input type="number" class="form-control form-control-sm f-rice5" value="${product.priceWithRice5kg ?? (product.price + 350)}">
               </div>
@@ -223,6 +231,8 @@ function renderProducts() {
     card.querySelector('.f-desc').addEventListener('change', (e) => { product.desc = e.target.value; scheduleSave(); });
     card.querySelector('.f-intention').addEventListener('change', (e) => { product.defaultIntention = e.target.value; scheduleSave(); });
     card.querySelector('.f-featured').addEventListener('change', (e) => { product.featured = e.target.checked; scheduleSave(); });
+    card.querySelector('.f-price-usd').addEventListener('change', (e) => { product.priceUSD = Number(e.target.value); scheduleSave(); });
+    card.querySelector('.f-price-sar').addEventListener('change', (e) => { product.priceSAR = Number(e.target.value); scheduleSave(); });
     card.querySelector('.f-rice5').addEventListener('change', (e) => { product.priceWithRice5kg = Number(e.target.value); scheduleSave(); });
     card.querySelector('.f-rice10').addEventListener('change', (e) => { product.priceWithRice10kg = Number(e.target.value); scheduleSave(); });
     card.querySelector('.f-rice5-usd').addEventListener('change', (e) => { product.priceWithRice5kgUSD = Number(e.target.value); scheduleSave(); });
@@ -382,6 +392,8 @@ addProductBtn.addEventListener('click', async () => {
     image: imagePath,
     defaultIntention: intention,
     featured: false,
+    priceUSD: defaultRiceUSD(price),
+    priceSAR: defaultRiceSAR(price),
     priceWithRice5kg: price + 350,
     priceWithRice10kg: price + 700,
     priceWithRice5kgUSD: defaultRiceUSD(price + 350),

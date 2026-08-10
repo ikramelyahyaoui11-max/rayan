@@ -240,10 +240,26 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ===================== Product cards (loaded from assets/data/products.json) =====================
+// Manual per-product USD/SAR prices (set in admin) override the auto-converted
+// EGP price when browsing in that currency - keeps the homepage grid
+// consistent with the product detail page.
+function updateCardPrice(priceEl, product) {
+  const currency = window.RayanCurrency.getCurrency();
+  const manual = currency === 'USD' ? product.priceUSD : currency === 'SAR' ? product.priceSAR : null;
+  if (manual) {
+    priceEl.removeAttribute('data-egp');
+    priceEl.innerHTML = `${manual.toLocaleString('en-US')} <span>${window.RayanCurrency.SYMBOLS[currency]}</span>`;
+  } else {
+    priceEl.dataset.egp = product.price;
+    priceEl.dataset.split = 'true';
+  }
+}
+
 fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' })
   .then((res) => res.json())
   .then((products) => {
     const productsGrid = document.getElementById('productsGrid');
+    const priceUpdaters = [];
 
     products.forEach((product) => {
       const card = document.createElement('div');
@@ -257,7 +273,7 @@ fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' })
           <h3>${product.name}</h3>
           <p class="product-desc">${product.desc}</p>
           <span class="stars">★★★★★</span>
-          <div class="product-price currency-price" data-egp="${product.price}" data-split="true">${product.price.toLocaleString('en-US')} <span>ج.م</span></div>
+          <div class="product-price currency-price" data-split="true"></div>
         </a>
         <div class="product-actions">
           <div class="qty-stepper">
@@ -281,8 +297,17 @@ fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' })
         qtyValue.textContent = '1';
       });
 
+      const priceEl = card.querySelector('.product-price');
+      priceUpdaters.push(() => updateCardPrice(priceEl, product));
+
       card.classList.add('in-view');
       productsGrid.appendChild(card);
+    });
+
+    priceUpdaters.forEach((update) => update());
+    document.addEventListener('rayan-currency-change', () => {
+      priceUpdaters.forEach((update) => update());
+      document.dispatchEvent(new CustomEvent('rayan-content-updated'));
     });
     document.dispatchEvent(new CustomEvent('rayan-content-updated'));
   });
