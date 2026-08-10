@@ -56,12 +56,11 @@ backToTop.addEventListener('click', () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-// ===================== Product data (loaded from products.json + services.json + settings.json) =====================
+// ===================== Product data (loaded from products.json + services.json) =====================
 Promise.all([
   fetch(`assets/data/products.json?v=${Date.now()}`, { cache: 'no-store' }).then((res) => res.json()),
   fetch(`assets/data/services.json?v=${Date.now()}`, { cache: 'no-store' }).then((res) => res.json()),
-  fetch(`assets/data/settings.json?v=${Date.now()}`, { cache: 'no-store' }).then((res) => res.json()).catch(() => ({})),
-]).then(([products, services, settings]) => {
+]).then(([products, services]) => {
     const PRODUCTS = [
       ...products,
       ...services.map((s) => ({ ...s, _isService: true })),
@@ -90,14 +89,12 @@ Promise.all([
     productPriceEl.dataset.split = 'true';
     document.getElementById('productIntention').value = product.defaultIntention;
 
-    // ---- Rice addon pricing (configured in admin panel settings, added on top of the base price) ----
-    const RICE_PRICE_PER_KG = Number(settings.ricePricePerKg) || 70;
-    function addonCost(addonValue) {
-      const match = addonValue.match(/(\d+)\s*كيلو/);
-      return match ? Number(match[1]) * RICE_PRICE_PER_KG : 0;
-    }
+    // ---- Rice addon pricing (set per-product in the admin panel) ----
     function currentTotalPrice() {
-      return product.price + addonCost(document.getElementById('productAddons').value);
+      const addon = document.getElementById('productAddons').value;
+      if (addon.includes('5') && product.priceWithRice5kg) return product.priceWithRice5kg;
+      if (addon.includes('10') && product.priceWithRice10kg) return product.priceWithRice10kg;
+      return product.price;
     }
     function updatePriceDisplay() {
       const total = currentTotalPrice();

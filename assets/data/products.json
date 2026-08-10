@@ -7,7 +7,9 @@
     "desc": "ذبح، سلخ، توزيع كامل على المحتاجين، وتوثيق بالاسم",
     "image": "assets/products/kharouf-1786242344813.webp",
     "defaultIntention": "أضحية",
-    "featured": true
+    "featured": true,
+    "priceWithRice5kg": 3150,
+    "priceWithRice10kg": 3500
   },
   {
     "id": "maaz",
@@ -17,7 +19,9 @@
     "desc": "مناسب للعقيقة أو الأضحية، ذبح وتوثيق كامل وتوزيع على الفقراء",
     "image": "assets/products/maaz-1786242287847.webp",
     "defaultIntention": "عقيقة",
-    "featured": false
+    "featured": false,
+    "priceWithRice5kg": 2950,
+    "priceWithRice10kg": 3300
   },
   {
     "id": "bakara",
@@ -27,6 +31,8 @@
     "desc": "ذبيحة كاملة الحجم، توثيق شامل وتوزيع على عدد أكبر من المستفيدين",
     "image": "assets/products/bakara-1786242298138.webp",
     "defaultIntention": "أضحية",
-    "featured": false
+    "featured": false,
+    "priceWithRice5kg": 3950,
+    "priceWithRice10kg": 4300
   }
 ]

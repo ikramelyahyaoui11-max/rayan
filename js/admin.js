@@ -174,6 +174,14 @@ function renderProducts() {
                 <label class="form-label small fw-bold mb-1">الوصف</label>
                 <input type="text" class="form-control form-control-sm f-desc" value="${product.desc}">
               </div>
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">السعر الكلي مع (5 كيلو) أرز (ج.م)</label>
+                <input type="number" class="form-control form-control-sm f-rice5" value="${product.priceWithRice5kg ?? (product.price + 350)}">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">السعر الكلي مع (10 كيلو) أرز (ج.م)</label>
+                <input type="number" class="form-control form-control-sm f-rice10" value="${product.priceWithRice10kg ?? (product.price + 700)}">
+              </div>
               <div class="col-12 d-flex align-items-center justify-content-between mt-2">
                 <div class="form-check">
                   <input type="checkbox" class="form-check-input f-featured" id="featured-${product.id}">
@@ -196,6 +204,8 @@ function renderProducts() {
     card.querySelector('.f-desc').addEventListener('change', (e) => { product.desc = e.target.value; scheduleSave(); });
     card.querySelector('.f-intention').addEventListener('change', (e) => { product.defaultIntention = e.target.value; scheduleSave(); });
     card.querySelector('.f-featured').addEventListener('change', (e) => { product.featured = e.target.checked; scheduleSave(); });
+    card.querySelector('.f-rice5').addEventListener('change', (e) => { product.priceWithRice5kg = Number(e.target.value); scheduleSave(); });
+    card.querySelector('.f-rice10').addEventListener('change', (e) => { product.priceWithRice10kg = Number(e.target.value); scheduleSave(); });
 
     card.querySelector('.admin-delete-btn').addEventListener('click', () => {
       if (!confirm(`هل تريد حذف "${product.name}"؟`)) return;
@@ -349,6 +359,8 @@ addProductBtn.addEventListener('click', async () => {
     image: imagePath,
     defaultIntention: intention,
     featured: false,
+    priceWithRice5kg: price + 350,
+    priceWithRice10kg: price + 700,
   });
 
   document.getElementById('newId').value = '';
@@ -822,7 +834,6 @@ const settingWhatsapp = document.getElementById('settingWhatsapp');
 const settingPhone = document.getElementById('settingPhone');
 const settingHeroTitle = document.getElementById('settingHeroTitle');
 const settingHeroDesc = document.getElementById('settingHeroDesc');
-const settingRicePricePerKg = document.getElementById('settingRicePricePerKg');
 const saveSettingsBtn = document.getElementById('saveSettingsBtn');
 const settingsStatusMsg = document.getElementById('settingsStatusMsg');
 
@@ -843,7 +854,6 @@ async function initSettingsTab() {
       settingPhone.value = settings.phone || '';
       settingHeroTitle.value = settings.heroTitle || '';
       settingHeroDesc.value = settings.heroDesc || '';
-      settingRicePricePerKg.value = settings.ricePricePerKg || 70;
       settingsLoaded = true;
     }
   } catch (err) { /* file may not exist yet - form stays empty, sha stays null */ }
@@ -855,7 +865,6 @@ saveSettingsBtn.addEventListener('click', async () => {
     phone: settingPhone.value.trim(),
     heroTitle: settingHeroTitle.value.trim(),
     heroDesc: settingHeroDesc.value.trim(),
-    ricePricePerKg: Number(settingRicePricePerKg.value) || 70,
   };
   saveSettingsBtn.disabled = true;
   showSettingsStatus('⏳ جاري الحفظ...', false);
