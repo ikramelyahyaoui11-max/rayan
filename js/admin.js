@@ -834,6 +834,8 @@ const settingWhatsapp = document.getElementById('settingWhatsapp');
 const settingPhone = document.getElementById('settingPhone');
 const settingHeroTitle = document.getElementById('settingHeroTitle');
 const settingHeroDesc = document.getElementById('settingHeroDesc');
+const settingUsdRate = document.getElementById('settingUsdRate');
+const settingSarRate = document.getElementById('settingSarRate');
 const saveSettingsBtn = document.getElementById('saveSettingsBtn');
 const settingsStatusMsg = document.getElementById('settingsStatusMsg');
 
@@ -854,6 +856,8 @@ async function initSettingsTab() {
       settingPhone.value = settings.phone || '';
       settingHeroTitle.value = settings.heroTitle || '';
       settingHeroDesc.value = settings.heroDesc || '';
+      settingUsdRate.value = settings.usdRate || 49;
+      settingSarRate.value = settings.sarRate || 13.05;
       settingsLoaded = true;
     }
   } catch (err) { /* file may not exist yet - form stays empty, sha stays null */ }
@@ -865,6 +869,8 @@ saveSettingsBtn.addEventListener('click', async () => {
     phone: settingPhone.value.trim(),
     heroTitle: settingHeroTitle.value.trim(),
     heroDesc: settingHeroDesc.value.trim(),
+    usdRate: Number(settingUsdRate.value) || 49,
+    sarRate: Number(settingSarRate.value) || 13.05,
   };
   saveSettingsBtn.disabled = true;
   showSettingsStatus('⏳ جاري الحفظ...', false);

@@ -1,11 +1,24 @@
 // Shared currency display module. All real prices stay in EGP internally
 // (products.json, WhatsApp order messages) - this only affects what visitors
-// SEE. Rates are approximate and meant for a rough idea, not exact payment.
+// SEE. Rates default to a rough estimate but are overridden by the admin's
+// manually-set exchange rates in settings.json once they load.
 window.RayanCurrency = (function () {
   const KEY = 'rayan_currency';
   const RATES = { EGP: 1, USD: 1 / 49, SAR: 1 / 13.05 };
   const SYMBOLS = { EGP: 'ج.م', USD: '$', SAR: 'ر.س' };
   const LABELS = { EGP: 'جنيه مصري (ج.م)', USD: 'دولار ($)', SAR: 'ريال سعودي (ر.س)' };
+
+  function loadRatesFromSettings() {
+    fetch(`assets/data/settings.json?v=${Date.now()}`, { cache: 'no-store' })
+      .then((res) => res.json())
+      .then((settings) => {
+        if (settings.usdRate) RATES.USD = 1 / Number(settings.usdRate);
+        if (settings.sarRate) RATES.SAR = 1 / Number(settings.sarRate);
+        document.querySelectorAll('.currency-switcher').forEach(renderSwitcher);
+        renderAllPrices();
+      })
+      .catch(() => { /* keep default rates if settings.json is unavailable */ });
+  }
 
   function getCurrency() {
     return localStorage.getItem(KEY) || 'EGP';
@@ -70,6 +83,7 @@ window.RayanCurrency = (function () {
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.currency-switcher').forEach(renderSwitcher);
     renderAllPrices();
+    loadRatesFromSettings();
   });
 
   // For content rendered dynamically after DOMContentLoaded (product cards,
