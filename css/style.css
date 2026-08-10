@@ -1530,12 +1530,12 @@ a:focus-visible, button:focus-visible, .btn:focus-visible {
   .brand-text strong { font-size: 15px; white-space: nowrap; }
   .header-actions .btn { padding: 9px 16px; font-size: 13.5px; white-space: nowrap; }
 
-  /* Facebook/Instagram FABs duplicate the footer social links - drop them on
-     mobile so the fixed button stack doesn't cover grid card content that
-     scrolls underneath it (2-column grids leave no safe margin on small screens) */
-  .facebook-fab, .instagram-fab { display: none; }
-  .cart-fab { width: 46px; height: 46px; font-size: 20px; bottom: 88px; left: 16px; }
-  .whatsapp-fab { width: 46px; height: 46px; font-size: 21px; bottom: 24px; left: 16px; }
+  /* Keep all 4 FABs on mobile but shrink + stack them tightly to reduce how
+     much of the 2-column grid content they cover while scrolling */
+  .cart-fab { width: 46px; height: 46px; font-size: 20px; bottom: 192px; left: 16px; }
+  .whatsapp-fab { width: 46px; height: 46px; font-size: 21px; bottom: 136px; left: 16px; }
+  .facebook-fab { width: 46px; height: 46px; bottom: 80px; left: 16px; }
+  .instagram-fab { width: 46px; height: 46px; bottom: 24px; left: 16px; }
 }
 
 @media (max-width: 860px) {
