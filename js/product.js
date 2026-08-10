@@ -90,19 +90,43 @@ Promise.all([
     document.getElementById('productIntention').value = product.defaultIntention;
 
     // ---- Rice addon pricing (set per-product in the admin panel) ----
+    // currentTotalPrice() is always EGP - it's what's actually charged/recorded
+    // (cart, WhatsApp order). Manual USD/SAR rice prices only change what's
+    // SHOWN on screen when browsing in that currency.
     function currentTotalPrice() {
       const addon = document.getElementById('productAddons').value;
       if (addon.includes('5') && product.priceWithRice5kg) return product.priceWithRice5kg;
       if (addon.includes('10') && product.priceWithRice10kg) return product.priceWithRice10kg;
       return product.price;
     }
+    function manualDisplayPrice() {
+      const addon = document.getElementById('productAddons').value;
+      const currency = window.RayanCurrency.getCurrency();
+      const is5 = addon.includes('5');
+      const is10 = addon.includes('10');
+      const symbol = window.RayanCurrency.SYMBOLS[currency];
+      if (currency === 'USD') {
+        if (is5 && product.priceWithRice5kgUSD) return { amount: product.priceWithRice5kgUSD, symbol };
+        if (is10 && product.priceWithRice10kgUSD) return { amount: product.priceWithRice10kgUSD, symbol };
+      } else if (currency === 'SAR') {
+        if (is5 && product.priceWithRice5kgSAR) return { amount: product.priceWithRice5kgSAR, symbol };
+        if (is10 && product.priceWithRice10kgSAR) return { amount: product.priceWithRice10kgSAR, symbol };
+      }
+      return null;
+    }
     function updatePriceDisplay() {
-      const total = currentTotalPrice();
-      productPriceEl.dataset.egp = total;
-      document.dispatchEvent(new CustomEvent('rayan-content-updated'));
+      const manual = manualDisplayPrice();
+      if (manual) {
+        productPriceEl.removeAttribute('data-egp');
+        productPriceEl.innerHTML = `${manual.amount.toLocaleString('en-US')} <span>${manual.symbol}</span>`;
+      } else {
+        productPriceEl.dataset.egp = currentTotalPrice();
+        document.dispatchEvent(new CustomEvent('rayan-content-updated'));
+      }
     }
     updatePriceDisplay();
     document.getElementById('productAddons').addEventListener('change', updatePriceDisplay);
+    document.addEventListener('rayan-currency-change', updatePriceDisplay);
 
     if (product._isService) {
       document.getElementById('productAddonsRow').style.display = 'none';

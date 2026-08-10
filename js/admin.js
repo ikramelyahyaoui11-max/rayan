@@ -135,6 +135,9 @@ async function loadProducts() {
 }
 
 // ===================== Render =====================
+function defaultRiceUSD(egp) { return Math.round((egp / 49) * 10) / 10; }
+function defaultRiceSAR(egp) { return Math.round((egp / 13.05) * 10) / 10; }
+
 function renderProducts() {
   productsList.innerHTML = '';
   products.forEach((product, index) => {
@@ -182,6 +185,22 @@ function renderProducts() {
                 <label class="form-label small fw-bold mb-1">السعر الكلي مع (10 كيلو) أرز (ج.م)</label>
                 <input type="number" class="form-control form-control-sm f-rice10" value="${product.priceWithRice10kg ?? (product.price + 700)}">
               </div>
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">السعر بالدولار مع (5 كيلو) أرز ($)</label>
+                <input type="number" step="0.1" class="form-control form-control-sm f-rice5-usd" value="${product.priceWithRice5kgUSD ?? defaultRiceUSD(product.priceWithRice5kg ?? (product.price + 350))}">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">السعر بالدولار مع (10 كيلو) أرز ($)</label>
+                <input type="number" step="0.1" class="form-control form-control-sm f-rice10-usd" value="${product.priceWithRice10kgUSD ?? defaultRiceUSD(product.priceWithRice10kg ?? (product.price + 700))}">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">السعر بالريال السعودي مع (5 كيلو) أرز (ر.س)</label>
+                <input type="number" step="0.1" class="form-control form-control-sm f-rice5-sar" value="${product.priceWithRice5kgSAR ?? defaultRiceSAR(product.priceWithRice5kg ?? (product.price + 350))}">
+              </div>
+              <div class="col-sm-6">
+                <label class="form-label small fw-bold mb-1">السعر بالريال السعودي مع (10 كيلو) أرز (ر.س)</label>
+                <input type="number" step="0.1" class="form-control form-control-sm f-rice10-sar" value="${product.priceWithRice10kgSAR ?? defaultRiceSAR(product.priceWithRice10kg ?? (product.price + 700))}">
+              </div>
               <div class="col-12 d-flex align-items-center justify-content-between mt-2">
                 <div class="form-check">
                   <input type="checkbox" class="form-check-input f-featured" id="featured-${product.id}">
@@ -206,6 +225,10 @@ function renderProducts() {
     card.querySelector('.f-featured').addEventListener('change', (e) => { product.featured = e.target.checked; scheduleSave(); });
     card.querySelector('.f-rice5').addEventListener('change', (e) => { product.priceWithRice5kg = Number(e.target.value); scheduleSave(); });
     card.querySelector('.f-rice10').addEventListener('change', (e) => { product.priceWithRice10kg = Number(e.target.value); scheduleSave(); });
+    card.querySelector('.f-rice5-usd').addEventListener('change', (e) => { product.priceWithRice5kgUSD = Number(e.target.value); scheduleSave(); });
+    card.querySelector('.f-rice10-usd').addEventListener('change', (e) => { product.priceWithRice10kgUSD = Number(e.target.value); scheduleSave(); });
+    card.querySelector('.f-rice5-sar').addEventListener('change', (e) => { product.priceWithRice5kgSAR = Number(e.target.value); scheduleSave(); });
+    card.querySelector('.f-rice10-sar').addEventListener('change', (e) => { product.priceWithRice10kgSAR = Number(e.target.value); scheduleSave(); });
 
     card.querySelector('.admin-delete-btn').addEventListener('click', () => {
       if (!confirm(`هل تريد حذف "${product.name}"؟`)) return;
@@ -361,6 +384,10 @@ addProductBtn.addEventListener('click', async () => {
     featured: false,
     priceWithRice5kg: price + 350,
     priceWithRice10kg: price + 700,
+    priceWithRice5kgUSD: defaultRiceUSD(price + 350),
+    priceWithRice10kgUSD: defaultRiceUSD(price + 700),
+    priceWithRice5kgSAR: defaultRiceSAR(price + 350),
+    priceWithRice10kgSAR: defaultRiceSAR(price + 700),
   });
 
   document.getElementById('newId').value = '';

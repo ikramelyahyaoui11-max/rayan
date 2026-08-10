@@ -9,7 +9,11 @@
     "defaultIntention": "أضحية",
     "featured": true,
     "priceWithRice5kg": 3150,
-    "priceWithRice10kg": 3500
+    "priceWithRice10kg": 3500,
+    "priceWithRice5kgUSD": 64.3,
+    "priceWithRice10kgUSD": 71.4,
+    "priceWithRice5kgSAR": 241.4,
+    "priceWithRice10kgSAR": 268.2
   },
   {
     "id": "maaz",
@@ -21,7 +25,11 @@
     "defaultIntention": "عقيقة",
     "featured": false,
     "priceWithRice5kg": 2950,
-    "priceWithRice10kg": 3300
+    "priceWithRice10kg": 3300,
+    "priceWithRice5kgUSD": 60.2,
+    "priceWithRice10kgUSD": 67.3,
+    "priceWithRice5kgSAR": 226.1,
+    "priceWithRice10kgSAR": 252.9
   },
   {
     "id": "bakara",
@@ -33,6 +41,10 @@
     "defaultIntention": "أضحية",
     "featured": false,
     "priceWithRice5kg": 3950,
-    "priceWithRice10kg": 4300
+    "priceWithRice10kg": 4300,
+    "priceWithRice5kgUSD": 80.6,
+    "priceWithRice10kgUSD": 87.8,
+    "priceWithRice5kgSAR": 302.7,
+    "priceWithRice10kgSAR": 329.5
   }
 ]
