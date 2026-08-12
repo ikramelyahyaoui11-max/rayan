@@ -39,7 +39,7 @@
     "id": "bakara",
     "name": "بقرة",
     "tag": "حصة كاملة",
-    "price": 3600,
+    "price": 13000,
     "desc": "ذبيحة كاملة الحجم، توثيق شامل وتوزيع على عدد أكبر من المستفيدين",
     "image": "assets/products/bakara-1786242298138.webp",
     "defaultIntention": "أضحية",
