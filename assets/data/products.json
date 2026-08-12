@@ -6,7 +6,7 @@
     "price": 2800,
     "desc": "ذبح، سلخ، توزيع كامل على المحتاجين، وتوثيق بالاسم",
     "image": "assets/products/kharouf-1786242344813.webp",
-    "defaultIntention": "أضحية",
+    "defaultIntention": "عقيقة",
     "featured": true,
     "priceUSD": 57.1,
     "priceSAR": 214.6,
