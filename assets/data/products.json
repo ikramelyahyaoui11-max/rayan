@@ -3,7 +3,7 @@
     "id": "kharouf",
     "name": "خروف",
     "tag": "الأكثر طلبًا",
-    "price": 2800,
+    "price": 2500,
     "desc": "ذبح، سلخ، توزيع كامل على المحتاجين، وتوثيق بالاسم",
     "image": "assets/products/kharouf-1786242344813.webp",
     "defaultIntention": "عقيقة",
